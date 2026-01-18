@@ -57,189 +57,166 @@
     </div>
   </nav>
 
-  <!-- Header -->
-  <header class="masthead">
-    <div class="container">
-      <div class="intro-text">
-        <div class="intro-lead-in">Creating the RAP Ontology</div>
-        <div class="intro-heading text-uppercase">Rap and Lyrics</div>
-        <a class="btn btn-primary btn-xl text-uppercase js-scroll-trigger" href="#preface">Tell Me More</a>
-      </div>
-    </div>
-  </header>
-
-  <!-- Services -->
-
-   <section class="content-section bg-light">
-    <div class="container text-center">
-          <h2 id="preface" style="text-align: center;">Preface.</h2>
-          <p>This project belongs to the 'Knowledge Representation and Extraction' course of University of Bologna, a.y. 2018/2019.The project is aimed at extracting knowledge of lyrics of 35k rap song dating from 1980 - 2015 with the final goal to covert extracted data in a linked open data environment as the RDF graph.</p>
- </div>
- <p>&nbsp;</p>
-
+<!-- Header -->
+<header class="masthead">
   <div class="container">
-  <div class="container text-center">
-          <h2>Introduction.</h2>
-          <p>The idea behind the project is inspired by the fact that rap is not just about music. Rap is an intensely <b>intertextual</b> and <b>self-referential</b> form. One of the reason for that is the extremely competitive expressive form of rap music. For that reason, emcees exhibit their rhyming abilities against the competition. Hip Hop is a unique era of culture where art, music, history, politics, fashion, trends and language became deeply pitted with metaphors that became consistent, ubiquitous and global. Hence, hip hop music is a milestone of information about culture at different time points.</p>
- </div>
- <p>&nbsp;</p>
+    <div class="intro-text">
+      <div class="intro-lead-in">Turning 35,000 Rap Lyrics into Structured Insights</div>
+      <div class="intro-heading text-uppercase">Rap & Lyrics</div>
+      <a class="btn btn-primary btn-xl text-uppercase js-scroll-trigger" href="#preface">Tell Me More</a>
+    </div>
+  </div>
+</header>
 
-  <!--XXXXXXXXX-->
-  <!-- About -->
-  <section class="page-section" id="about">
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-12 text-center">
-          <h2 class="section-heading text-uppercase">Workflow</h2>
-          <h3 class="section-subheading text-muted">The methodology of the project.</h3>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-lg-12">
-          <ul class="timeline">
-            <li>
-              <div class="timeline-image">
-                <img class="rounded-circle img-fluid" src="img/about/1.jpg" alt="">
-              </div>
-              <div class="timeline-panel">
-                <div class="timeline-heading">
-                  <h3>Getting the knowledge about the topic</h3>
-                  <h4 class="subheading">SPARQL Queries</h4>
-                </div>
-                <div class="timeline-body">
-                  <p class="text-muted">The information related to Hip Hop and Rap was queried by using the SPARQL language. The data was extracted from DBpedia by using Virtuoso SPARQL Query Editor and Wikidata.<a class="nav-link js-scroll-trigger" href="#queries">LEARN MORE</a></p>
-                </div>
-              </div>
-            </li>
-            <li class="timeline-inverted">
-              <div class="timeline-image">
-                <img class="rounded-circle img-fluid" src="img/about/2.jpg" alt="">
-              </div>
-              <div class="timeline-panel">
-                <div class="timeline-heading">
-                  <h3>Getting the raw data</h3>
-                  <h4>Running Python Code</h4>
-                
-                </div>
-                <div class="timeline-body">
-                  <p class="text-muted">As a rsearchable database the lyrics for the top 100 rappers was obtained as well as the dataset of songs from MetroLyrics. By running the python code, the data was cleaned and processes.<a class="nav-link js-scroll-trigger" href="#gettingrawdata">LEARN MORE</a></p> 
-                </div>
-              </div>
-            </li>
-            <li>
-              <div class="timeline-image">
-                <img class="rounded-circle img-fluid" src="img/about/3.jpg" alt="">
-              </div>
-              <div class="timeline-panel">
-                <div class="timeline-heading">
-                  <h3>Sentiment Analysis</h3>
-                  <h4 class="subheading">VADER</h4>
-                </div>
-                <div class="timeline-body">
-                  <p class="text-muted">In order to obrain a sentiment score, VADER (Valence Aware Dictionary and sEntiment Reasoner) a lexicon and rule-based sentiment analysis tool was used<a class="nav-link js-scroll-trigger" href="#mining">LEARN MORE</a></p>
-                </div>
-              </div>
-            </li>
-            <li class="timeline-inverted">
-              <div class="timeline-image">
-                <img class="rounded-circle img-fluid" src="img/about/4.jpg" alt="">
-              </div>
-              <div class="timeline-panel">
-                <div class="timeline-heading">
-                  <h3>The Lyrics Mining Process</h3>
-                  <h4 class="subheading">Literary devices</h4>
-                </div>
-                <div class="timeline-body">
-                  <p class="text-muted">In order to implement lyrics mining on the database, sizeable samples of names of interest was used, as well as a script to search for the names within the lyrics database. The final part of this step includes the  detection and interpretation of the use of literary devices in lyrics.<a class="nav-link js-scroll-trigger" href="#mining">LEARN MORE</a></p>
-                </div>
-              </div>
-            </li>
-            <li>
-              <div class="timeline-image">
-                <img class="rounded-circle img-fluid" src="img/about/1.jpg" alt="">
-              </div>
-              <div class="timeline-panel">
-                <div class="timeline-heading">
-                  <h4>Creating RAP Ontology</h4>
-                  
-                </div>
-                <div class="timeline-body">
-                  <p class="text-muted">The RAP Ontology is intended to promote a shared understanding of rap lyrics as the source of cultural heritage information by providing a framework that any rap song can be mapped to.<a class="nav-link js-scroll-trigger" href="#rapontology">LEARN MORE</a></p>
-                </div>
-              </div>
-            </li>
-            <li class="timeline-inverted">
-              <div class="timeline-image">
-                <h4>Map
-                  <br>rap
-                  <br>lyric!</h4>
-              </div>
-            </li>
-          </ul>
-        </div>
+<!-- Context -->
+
+<section class="content-section bg-light">
+  <div class="container text-center">
+    <h2 id="preface" style="text-align: center;">Context</h2>
+    <p>
+      Large text corpora often appear as unstructured chaos. Patterns exist, but remain invisible at human scale.
+      This project explores how frequency-based analysis can transform a massive body of raw lyrics into a structured and interpretable dataset.
+    </p>
+  </div>
+
+  <p>&nbsp;</p>
+
+  <div class="container text-center">
+    <h2>Why Rap Lyrics?</h2>
+    <p>
+      Rap is a highly self-referential and competitive expressive form. Artists constantly reuse, remix, and respond to each other’s language.
+      As a result, rap lyrics form a dense network of recurring terms and stylistic anchors.
+      This makes the genre an ideal corpus for observing how structure emerges from large-scale text data.
+    </p>
+  </div>
+
+  <p>&nbsp;</p>
+</section>
+
+<!-- About -->
+<section class="page-section" id="about">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 text-center">
+        <h2 class="section-heading text-uppercase">Workflow</h2>
+        <h3 class="section-subheading text-muted">How raw text becomes structured insight.</h3>
       </div>
     </div>
-  </section>
+    <div class="row">
+      <div class="col-lg-12">
+        <ul class="timeline">
 
+          <li>
+            <div class="timeline-image">
+              <img class="rounded-circle img-fluid" src="img/about/1.jpg" alt="">
+            </div>
+            <div class="timeline-panel">
+              <div class="timeline-heading">
+                <h3>Framing the Problem</h3>
+                <h4 class="subheading">What should be observed?</h4>
+              </div>
+              <div class="timeline-body">
+                <p class="text-muted">
+                  Defined the analytical scope and research questions: how patterns emerge in large text corpora and what can be revealed through frequency-based analysis.
+                </p>
+              </div>
+            </div>
+          </li>
 
+          <li class="timeline-inverted">
+            <div class="timeline-image">
+              <img class="rounded-circle img-fluid" src="img/about/2.jpg" alt="">
+            </div>
+            <div class="timeline-panel">
+              <div class="timeline-heading">
+                <h3>Data Collection</h3>
+                <h4 class="subheading">Building the corpus</h4>
+              </div>
+              <div class="timeline-body">
+                <p class="text-muted">
+                  Compiled a dataset of 35,000 rap lyrics from public sources, forming a large unstructured text corpus.
+                </p>
+              </div>
+            </div>
+          </li>
 
- <!-- Queries -->
-  <section class="content-section bg-light">
-<div class="container text-center">
-<h2 id="queries" style="text-align: center;">Queries</h2>
-<p class="lead mb-5">In this section, the information related to Hip Hop and Rap is queried by using the SPARQL language. The data is extracted from <a href="https://wiki.dbpedia.org">DBpedia</a> by using <a href="http://dbpedia.org/sparql">Virtuoso SPARQL Query Editor</a> and <a href="https://www.wikidata.org/wiki/Wikidata:Main_Page">Wikidata</a>.</p>
-<table class="table table-bordered">
-<tbody>
-<tr>
-<th>NL Question</th>
-<th>SPARQL Query</th>
-<th>Answer</th>
-</tr>
-<tr>
-<td>What is Hip Hop?</td>
-<td>PREFIX : &lt;http://dbpedia.org/resource/&gt; <br/>PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; <br /> <br/>SELECT ?s WHERE { <br/>?s rdfs:label "Hip Hop"@en <br />} </td>
-<td><a href="https://dbpedia.org/sparql?default-graph-uri=http%3A%2F%2Fdbpedia.org&amp;query=PREFIX+%3A+%3Cttp%3A%2F%2Fdbpedia.org%2Fresource%2F%3E%0D%0APREFIX+rdfs%3A+%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0D%0ASELECT+%3Fs+WHERE+%7B%0D%0A%3Fs+rdfs%3Alabel+%22Hip+Hop%22%40en%0D%0A%7D&amp;format=text%2Fhtml&amp;CXML_redir_for_subjs=121&amp;CXML_redir_for_hrefs=&amp;timeout=30000&amp;debug=on&amp;run=+Run+Query+">Query Result</a></td>
-</tr>
-<tr>
-<td>What is Rapping?</td>
-<td>PREFIX : &lt;http://dbpedia.org/resource/&gt; <br />PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; <br /> <br />SELECT ?s WHERE { <br />?s rdfs:label "Rapping"@en <br />} </td>
-<td><a href="https://dbpedia.org/sparql?default-graph-uri=http%3A%2F%2Fdbpedia.org&amp;query=PREFIX+%3A+%3Chttp%3A%2F%2Fdbpedia.org%2Fresource%2F%3E%0D%0APREFIX+rdfs%3A+%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0D%0ASELECT+%3Fs+WHERE+%7B%0D%0A%3Fs+rdfs%3Alabel+%22Rapping%22%40en%0D%0A%7D&amp;format=text%2Fhtml&amp;CXML_redir_for_subjs=121&amp;CXML_redir_for_hrefs=&amp;timeout=30000&amp;debug=on&amp;run=+Run+Query+">Query Result</a></td>
-</tr>
-<tr>
-<td>What are genres of Hip Hop</td>
-<td>select distinct ?y <br/>WHERE {<br/>?y dct:subject dbc:Hip_hop_genres <br />}</td>
-<td><a href="https://dbpedia.org/sparql?default-graph-uri=http%3A%2F%2Fdbpedia.org&amp;query=select+distinct+%3Fy+%0D%0A%0D%0AWHERE+%7B+%0D%0A%3Fy+dct%3Asubject+dbc%3AHip_hop_genres%0D%0A%7D%0D%0A%0D%0ALIMIT+100&amp;format=text%2Fhtml&amp;CXML_redir_for_subjs=121&amp;CXML_redir_for_hrefs=&amp;timeout=30000&amp;debug=on&amp;run=+Run+Query+">Query Result</a></td>
-</tr>
-<tr>
-<td>What are Rap Bands and their associated members?</td>
-<td>PREFIX dbo: &lt;http://dbpedia.org/ontology/&gt; <br/>
-  PREFIX dbr: &lt;http://dbpedia.org/resource/&gt; <br/>
-  PREFIX dbp: &lt;http://dbpedia.org/property/&gt; <br/>
-  PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt; <br/>
-  PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; <br/>
-  SELECT ?members ?bandName where { <br/>?band dbo:genre dbr:Rap . <br/>?band dbp:currentMembers ?members. <br/>?band foaf:name ?bandName <br/>FILTER(langMatches(lang(?bandName), "en")) <br />} </td>
-<td><a href="https://dbpedia.org/sparql?default-graph-uri=http%3A%2F%2Fdbpedia.org&amp;query=PREFIX+dbo%3A+%3Chttp%3A%2F%2Fdbpedia.org%2Fontology%2F%3E%0D%0APREFIX+dbr%3A+%3Chttp%3A%2F%2Fdbpedia.org%2Fresource%2F%3E%0D%0APREFIX+dbp%3A+%3Chttp%3A%2F%2Fdbpedia.org%2Fproperty%2F%3E%0D%0APREFIX+foaf%3A+%3Chttp%3A%2F%2Fxmlns.com%2Ffoaf%2F0.1%2F%3E%0D%0APREFIX+rdfs%3A+%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0D%0A%0D%0ASELECT+%3Fmembers+%3FbandName+where+%7B%0D%0A+%3Fband+dbo%3Agenre+dbr%3ARap+.%0D%0A+%3Fband+dbp%3AcurrentMembers+%3Fmembers.%0D%0A+%3Fband+foaf%3Aname+%3FbandName%0D%0A+FILTER%28langMatches%28lang%28%3FbandName%29%2C+%22en%22%29%29%0D%0A%7D&amp;format=text%2Fhtml&amp;CXML_redir_for_subjs=121&amp;CXML_redir_for_hrefs=&amp;timeout=30000&amp;debug=on&amp;run=+Run+Query+">Query Result</a>&nbsp;&nbsp;</td>
-</tr>
-<tr>
-<td>What are Hip Hop Bands and their associated members?</td>
-<td>
-<p>PREFIX dbo: &lt;http://dbpedia.org/ontology/&gt; 
-PREFIX dbr: &lt;http://dbpedia.org/resource/&gt; 
-PREFIX dbp: &lt;http://dbpedia.org/property/&gt; 
-PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt; 
-PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;</p>
-<p>SELECT ?members ?bandName where { ?band dbo:genre dbr:Rap . ?band dbp:currentMembers ?members. ?band foaf:name ?bandName FILTER(langMatches(lang(?bandName), "en")) }</p>
-</td>
-<td>&nbsp;<a href="https://dbpedia.org/sparql?default-graph-uri=http%3A%2F%2Fdbpedia.org&amp;query=PREFIX+dbo%3A+%3Chttp%3A%2F%2Fdbpedia.org%2Fontology%2F%3E%0D%0APREFIX+dbr%3A+%3Chttp%3A%2F%2Fdbpedia.org%2Fresource%2F%3E%0D%0APREFIX+dbp%3A+%3Chttp%3A%2F%2Fdbpedia.org%2Fproperty%2F%3E%0D%0APREFIX+foaf%3A+%3Chttp%3A%2F%2Fxmlns.com%2Ffoaf%2F0.1%2F%3E%0D%0APREFIX+rdfs%3A+%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0D%0A%0D%0ASELECT+%3Fmembers+%3FbandName+where+%7B%0D%0A+%3Fband+dbo%3Agenre+dbr%3AHip-hop+.%0D%0A+%3Fband+dbp%3AcurrentMembers+%3Fmembers.%0D%0A+%3Fband+foaf%3Aname+%3FbandName%0D%0A+FILTER%28langMatches%28lang%28%3FbandName%29%2C+%22en%22%29%29%0D%0A%7D&amp;format=text%2Fhtml&amp;CXML_redir_for_subjs=121&amp;CXML_redir_for_hrefs=&amp;timeout=30000&amp;debug=on&amp;run=+Run+Query+">Query Result</a></td>
-</tr>
-<tr>
-<td>&nbsp;What are derivatives genres of Hip Hop?&nbsp;<br/><br/><br/></td>
-<td>&nbsp;select distinct ?y <br />WHERE { <br />?y a dbo:Genre . <br/>?y dbo:derivative dbr:Hip_hop_music</td>
-<td>&nbsp;<a href="https://dbpedia.org/sparql?default-graph-uri=http%3A%2F%2Fdbpedia.org&amp;query=select+distinct+%3Fy+%0D%0A%0D%0AWHERE+%7B+%0D%0A%3Fy+a+dbo%3AGenre+.+%0D%0A%3Fy+dbo%3Aderivative+dbr%3AHip_hop_music%0D%0A%7D%0D%0A%0D%0ALIMIT+100&amp;format=text%2Fhtml&amp;CXML_redir_for_subjs=121&amp;CXML_redir_for_hrefs=&amp;timeout=30000&amp;debug=on&amp;run=+Run+Query+">Query Result</a></td>
-</tr>
-</tbody>
-</table>
-</div>
+          <li>
+            <div class="timeline-image">
+              <img class="rounded-circle img-fluid" src="img/about/3.jpg" alt="">
+            </div>
+            <div class="timeline-panel">
+              <div class="timeline-heading">
+                <h3>Cleaning & Normalization</h3>
+                <h4 class="subheading">Preparing raw text</h4>
+              </div>
+              <div class="timeline-body">
+                <p class="text-muted">
+                  Processed the corpus using Python: cleaned noise, normalized tokens, removed stop-words and non-lexical elements.
+                </p>
+              </div>
+            </div>
+          </li>
+
+          <li class="timeline-inverted">
+            <div class="timeline-image">
+              <img class="rounded-circle img-fluid" src="img/about/4.jpg" alt="">
+            </div>
+            <div class="timeline-panel">
+              <div class="timeline-heading">
+                <h3>Exploratory Analysis</h3>
+                <h4 class="subheading">Finding structure</h4>
+              </div>
+              <div class="timeline-body">
+                <p class="text-muted">
+                  Applied frequency-based analysis to identify dominant terms, long-tail distributions, and recurring lexical anchors.
+                </p>
+              </div>
+            </div>
+          </li>
+
+          <li>
+            <div class="timeline-image">
+              <img class="rounded-circle img-fluid" src="img/about/1.jpg" alt="">
+            </div>
+            <div class="timeline-panel">
+              <div class="timeline-heading">
+                <h3>Interpretation & Visualization</h3>
+                <h4 class="subheading">From data to insight</h4>
+              </div>
+              <div class="timeline-body">
+                <p class="text-muted">
+                  Translated numeric patterns into interpretable visual forms and insights, making large-scale structure readable at human scale.
+                </p>
+              </div>
+            </div>
+          </li>
+
+          <li class="timeline-inverted">
+            <div class="timeline-image">
+              <h4>Insight
+                <br>from
+                <br>Chaos</h4>
+            </div>
+          </li>
+
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Data Sources -->
+<section class="content-section bg-light">
+  <div class="container text-center">
+    <h2 id="datasources">Data Sources</h2>
+    <p class="lead mb-5">
+      The project combines multiple public datasets, including large lyric repositories and structured cultural references.
+      These sources were used to construct a coherent corpus of 35,000 rap lyrics and to ensure consistency across artist and genre metadata.
+    </p>
+    <p>
+      This step established a reliable foundation for subsequent processing and analysis, transforming heterogeneous inputs into a unified dataset ready for exploration.
+    </p>
+  </div>
 </section>
 
  <div class="container">
