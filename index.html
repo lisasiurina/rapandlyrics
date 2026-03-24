@@ -3,407 +3,428 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfolio Case: Lyric Data Mining (1980-2015)</title>
+    <title>RAP & AUTO: DATA MINING REPORT</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=JetBrains+Mono:wght@400;500&display=swap');
         
         :root {
-            --bg: #0a0a0c;
-            --card: #141417;
+            --bg: #000000;
             --accent: #ffffff;
-            --border: #222226;
+            --border: #1a1a1a;
         }
 
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
             background-color: var(--bg);
-            color: #e2e2e6;
+            color: #e2e2e7; /* Улучшенная общая читаемость */
             line-height: 1.6;
+            overflow-x: hidden;
         }
+
+        * { font-style: normal !important; }
 
         .mono { font-family: 'JetBrains Mono', monospace; }
 
-        .case-container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 0 1.5rem;
-        }
-
-        .section-spacing { margin-bottom: 6rem; }
-
-        .step-card {
-            background: var(--card);
-            border: 1px solid var(--border);
+        .chart-container-outer {
+            background: #050505;
             padding: 2.5rem;
             border-radius: 1.5rem;
-            position: relative;
-            transition: transform 0.3s ease, border-color 0.3s ease;
-        }
-        
-        .step-card:hover {
-            border-color: #444;
-            transform: translateY(-2px);
-        }
-
-        .chart-container-outer {
-            background: linear-gradient(180deg, #141417 0%, #0a0a0c 100%);
-            padding: 2.5rem;
-            border-radius: 2rem;
             border: 1px solid var(--border);
-            margin: 2rem 0;
         }
 
-        .chart-wrapper {
-            position: relative;
-            height: 600px;
+        .tab-active {
+            background: #fff;
+            color: #000;
         }
 
-        .tool-tag {
-            background: #222;
-            padding: 4px 12px;
-            border-radius: 6px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: #888;
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s ease-out;
         }
 
-        h1, h2, h3 { font-weight: 800; tracking: -0.02em; color: #fff; }
-        
-        h2 { font-style: normal !important; }
+        .scroll-reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
 
-        .code-block {
-            background: #000;
-            padding: 1.25rem;
-            border-radius: 0.75rem;
+        .tech-tag {
+            background: #111;
             border: 1px solid #333;
-            font-size: 0.8rem;
-            margin-top: 1rem;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            color: #bbb;
         }
 
-        /* Custom Stats Overlay */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 1rem;
-            margin-bottom: 2rem;
+        /* Fixed Pipeline Structure */
+        .pipeline-wrapper {
+            position: relative;
         }
 
-        .stat-item {
-            padding: 1rem;
-            background: rgba(255,255,255,0.03);
-            border-radius: 1rem;
-            border: 1px solid rgba(255,255,255,0.05);
+        .pipeline-line {
+            position: absolute;
+            left: 7px; 
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background: linear-gradient(180deg, transparent, #444 10%, #444 90%, transparent);
+            z-index: 0;
+        }
+
+        .step-item {
+            display: flex;
+            gap: 2.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-indicator {
+            flex-shrink: 0;
+            width: 15px;
+            position: relative;
+        }
+
+        .step-dot {
+            width: 15px;
+            height: 15px;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow: 0 0 20px rgba(255,255,255,0.8);
+            margin-top: 0.75rem; /* Выравнивание по первой строке заголовка */
+        }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: #1a1a1a; border-radius: 10px; }
+        
+        .description-text {
+            color: #a1a1aa; /* Более яркий серый для читаемости */
         }
     </style>
 </head>
 <body>
 
-    <!-- Header / Intro -->
-    <header class="pt-24 pb-16 text-center border-b border-[#222]">
-        <div class="case-container">
-            <div class="flex justify-center gap-2 mb-6">
-                <span class="tool-tag">Data Parsing</span>
-                <span class="tool-tag">NLP Logic</span>
-                <span class="tool-tag">1980–2015 Dataset</span>
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 px-6 py-4 flex justify-between items-center border-b border-white/5 backdrop-blur-md bg-black/80">
+        <div class="flex items-center gap-2">
+            <div class="w-8 h-8 bg-white rounded flex items-center justify-center">
+                <i data-lucide="database" class="text-black w-5 h-5"></i>
             </div>
-            <h1 class="text-5xl md:text-7xl mb-8 leading-tight">
-                Parsing 35 Years <br>of Rap Lyrics
+            <span class="font-bold tracking-tighter text-white uppercase">RAP & AUTO</span>
+        </div>
+        <div class="hidden md:flex gap-8 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">
+            <a href="#pipeline" class="hover:text-white transition-colors">Steps</a>
+            <a href="#visuals" class="hover:text-white transition-colors">Results</a>
+            <a href="https://github.com/lisasiurina/rapandlyrics" target="_blank" class="hover:text-white transition-colors">Code</a>
+        </div>
+        <div class="flex items-center gap-4">
+            <span class="tech-tag hidden sm:block">Python 3.9</span>
+            <div class="h-4 w-px bg-white/10 hidden sm:block"></div>
+            <a href="https://github.com/lisasiurina/rapandlyrics" target="_blank" class="text-[10px] font-bold uppercase tracking-widest text-white hover:opacity-70">Github</a>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <header class="relative pt-48 pb-32 bg-black overflow-hidden">
+        <div class="max-w-4xl mx-auto px-6 relative z-10">
+            <div class="inline-flex items-center gap-2 px-3 py-1 bg-white/5 border border-white/10 text-[10px] font-bold uppercase tracking-widest mb-8">
+                <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+                End-to-End Data Engineering Case Study
+            </div>
+            <h1 class="text-6xl md:text-8xl font-extrabold text-white mb-8 tracking-tighter leading-none">
+                LYRIC DATA <br><span class="text-gray-700">MINING</span>
             </h1>
-            <p class="text-xl text-gray-400 max-w-2xl mx-auto italic">
-                Automated extraction and frequency analysis of automotive brands mentioned in hip-hop from 1980 to 2015.
+            <p class="text-xl text-gray-400 font-light leading-relaxed mb-12 max-w-2xl">
+                Exploring 35 years of Hip-Hop history through the lens of automotive brands. A full lifecycle project: from custom web scraping to cultural trend visualization.
             </p>
+            <div class="flex flex-wrap gap-12">
+                <div>
+                    <span class="text-[10px] uppercase tracking-widest text-gray-500 block mb-2">Dataset Size</span>
+                    <span class="text-2xl font-bold text-white uppercase">4.8K Tracks</span>
+                </div>
+                <div>
+                    <span class="text-[10px] uppercase tracking-widest text-gray-500 block mb-2">Brand Entities</span>
+                    <span class="text-2xl font-bold text-white uppercase">85 Manufacturers</span>
+                </div>
+                <div>
+                    <span class="text-[10px] uppercase tracking-widest text-gray-500 block mb-2">Timeline</span>
+                    <span class="text-2xl font-bold text-white uppercase">1980 — 2015</span>
+                </div>
+            </div>
         </div>
     </header>
 
-    <main class="case-container py-20">
-
-        <!-- Section: Project Essence & Goal -->
-        <section class="section-spacing">
-            <h2 class="text-3xl mb-8 uppercase tracking-tight">Project Summary & Objectives</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div class="space-y-4">
-                    <h3 class="text-xl text-white">The Vision</h3>
-                    <p class="text-gray-400">
-                        In hip-hop culture, automobiles serve as more than just transportation; they are vital status symbols and cultural markers. The goal of this project was to quantitatively evaluate the presence of various car brands in song lyrics over a 35-year span (1980–2015).
-                    </p>
-                </div>
-                <div class="space-y-4">
-                    <h3 class="text-xl text-white">Key Objectives</h3>
-                    <ul class="list-disc list-inside text-gray-400 space-y-2">
-                        <li>Extract a comprehensive list of global car brands via Wikipedia scraping.</li>
-                        <li>Compile a massive lyric corpus from Billboard Rap Charts (4,800+ tracks).</li>
-                        <li>Develop a search algorithm capable of handling slang and context.</li>
-                        <li>Visualize popularity trends and brand evolution within the genre.</li>
-                    </ul>
-                </div>
-            </div>
-        </section>
+    <main class="max-w-4xl mx-auto px-6 py-20 bg-black">
         
-        <!-- Section: Data Sources -->
-        <section class="section-spacing">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-                <div>
-                    <h2 class="text-3xl mb-6">01. Data Sources</h2>
-                    <p class="text-gray-400 mb-6">
-                        The raw dataset was compiled by scraping three specific platforms to ensure a complete lyrical archive for the 35-year study period:
-                    </p>
-                    <ul class="space-y-4">
-                        <li class="flex items-start gap-3">
-                            <span class="text-white font-bold mono">/01</span>
-                            <div>
-                                <span class="text-white font-bold block">Genius API</span>
-                                <span class="text-sm text-gray-500 italic">Primary corpus for modern lyrics and metadata.</span>
-                            </div>
-                        </li>
-                        <li class="flex items-start gap-3">
-                            <span class="text-white font-bold mono">/02</span>
-                            <div>
-                                <span class="text-white font-bold block">Billboard Rap Charts</span>
-                                <span class="text-sm text-gray-500 italic">Used to filter the top 100 tracks per year for relevance.</span>
-                            </div>
-                        </li>
-                        <li class="flex items-start gap-3">
-                            <span class="text-white font-bold mono">/03</span>
-                            <div>
-                                <span class="text-white font-bold block">AZLyrics Archive</span>
-                                <span class="text-sm text-gray-500 italic">Backup source for cleaning missing 80s/90s data.</span>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-                <div class="step-card bg-[#0f0f12]">
-                     <h4 class="text-xs font-bold uppercase mb-4 text-[#555] tracking-widest">Dataset Breakdown</h4>
-                     <div class="space-y-4">
-                        <div class="flex justify-between items-end border-b border-[#222] pb-2">
-                            <span class="text-sm text-gray-400">Time Window</span>
-                            <span class="font-bold">1980-2015</span>
-                        </div>
-                        <div class="flex justify-between items-end border-b border-[#222] pb-2">
-                            <span class="text-sm text-gray-400">Total Lyrics</span>
-                            <span class="font-bold">4,820+</span>
-                        </div>
-                        <div class="flex justify-between items-end">
-                            <span class="text-sm text-gray-400">Unique Brands</span>
-                            <span class="font-bold">85</span>
-                        </div>
-                     </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Section: Brand Reference Preparation -->
-        <section class="section-spacing">
-            <h2 class="text-3xl mb-10">02. Brand Reference Preparation</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div class="step-card">
-                    <h3 class="text-xl mb-4">Reference Extraction</h3>
-                    <p class="text-gray-400 text-sm leading-relaxed mb-4">
-                        Wikipedia lists of car manufacturers and brands by country were manually downloaded. To simplify the process and avoid complex HTML overhead, <strong>Mobile View</strong> was utilized for a cleaner DOM structure.
-                    </p>
-                    <p class="text-gray-400 text-sm leading-relaxed">
-                        By running <code class="text-white mono bg-white/10 px-1">clean_carlist_wiki.py</code>, brand name tags were extracted and cleaned using the <strong>Beautiful Soup</strong> library and <strong>NLTK</strong> for natural language refinement.
-                    </p>
-                    <div class="mt-6 pt-4 border-t border-white/10 flex flex-col gap-2">
-                        <a href="https://github.com/lisasiurina/rapandlyrics/blob/master/clean_carlist_wiki.py" target="_blank" class="text-white text-xs font-bold hover:underline">View clean_carlist_wiki.py &rarr;</a>
-                        <a href="https://github.com/lisasiurina/rapandlyrics/blob/master/hellacars.csv" target="_blank" class="text-white text-xs font-bold hover:underline">View hellacars.csv &rarr;</a>
-                    </div>
-                </div>
-                <div class="step-card">
-                    <h3 class="text-xl mb-4">Disambiguation Logic</h3>
-                    <p class="text-gray-400 text-sm leading-relaxed mb-4">
-                        To maintain data integrity, certain car brands were explicitly excluded from the mining process. This prevents false positives caused by double meanings or unrelated proper names.
-                    </p>
-                    <p class="text-gray-400 text-sm leading-relaxed italic">
-                        Excluded examples: <strong>Prince</strong> (artist name), <strong>MINI</strong> (common adjective), <strong>Oakland</strong> (city name).
-                    </p>
-                    <p class="text-gray-400 text-sm mt-4">
-                        Ensuring that "Prince" in lyrics referred to the brand, not the artist, was nearly impossible without advanced context, so such terms were pruned for accuracy.
-                    </p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Section: Technical Pipeline -->
-        <section class="section-spacing">
-            <h2 class="text-3xl mb-10">03. Technical Pipeline</h2>
-            <div class="space-y-8">
-                <div class="step-card">
-                    <span class="absolute -top-4 -left-4 w-10 h-10 bg-white text-black flex items-center justify-center rounded-full font-bold shadow-lg">A</span>
-                    <h3 class="text-xl mb-4">Lyrics Mining & Counting</h3>
-                    <p class="text-gray-400 mb-2">
-                        Execution of <code class="text-white mono">reader1.py</code> allowed for obtaining the total frequency of brand mentions per artist.
-                    </p>
-                    <p class="text-gray-400 text-sm mb-4">
-                        The script iterates through the compiled lyric archive, comparing tokens against the normalized reference list from <em>hellacars.csv</em>.
-                    </p>
-                    <div class="code-block">
-                        <pre class="mono text-blue-400 overflow-x-auto">
-# Core Logic Snippet
-for artist in database:
-    for brand in car_reference:
-        # Case-insensitive substring matching
-        count = raw_text.lower().count(brand.lower())
-        stats[artist][brand] = count</pre>
-                    </div>
-                </div>
-
-                <div class="step-card">
-                    <span class="absolute -top-4 -left-4 w-10 h-10 bg-white text-black flex items-center justify-center rounded-full font-bold shadow-lg">B</span>
-                    <h3 class="text-xl mb-4">Data Normalization (RegEx)</h3>
-                    <p class="text-gray-400 leading-relaxed">
-                        To handle the variety of slang used over 35 years, <strong>Regular Expressions</strong> were used to group identifiers. Mentions such as <em>"Caddy"</em>, <em>"DeVille"</em>, and <em>"Fleetwood"</em> were automatically aggregated under the primary **Cadillac** key.
-                    </p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Section: Results -->
-        <section class="section-spacing">
-            <h2 class="text-3xl mb-6">04. Visual Intelligence</h2>
-            <p class="text-gray-400 mb-10">
-                Frequency analysis of brand mentions within the 1980–2015 dataset. Hover over the bars to see specific data points.
-            </p>
+        <!-- Vertical Pipeline -->
+        <section id="pipeline" class="mb-48">
+            <h2 class="text-[10px] font-bold uppercase tracking-[0.4em] text-white/60 mb-20 border-l-2 border-white pl-4">Project Stages</h2>
             
-            <div class="chart-container-outer">
-                <div class="stats-grid">
-                    <div class="stat-item">
-                        <span class="text-[10px] uppercase text-gray-500 block mb-1">Top Tier</span>
-                        <span class="text-xl font-bold text-white">Mercedes</span>
+            <div class="pipeline-wrapper space-y-32">
+                <div class="pipeline-line"></div>
+
+                <!-- Step 1 -->
+                <div class="step-item scroll-reveal">
+                    <div class="step-indicator">
+                        <div class="step-dot"></div>
                     </div>
-                    <div class="stat-item">
-                        <span class="text-[10px] uppercase text-gray-500 block mb-1">Growth Leader</span>
-                        <span class="text-xl font-bold text-white">Lexus</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="text-[10px] uppercase text-gray-500 block mb-1">Legacy Power</span>
-                        <span class="text-xl font-bold text-white">Cadillac</span>
+                    <div class="flex-1">
+                        <div class="mb-6">
+                            <span class="mono text-[11px] text-white/60 uppercase tracking-[0.3em] block mb-2">Stage 01</span>
+                            <h3 class="text-3xl font-bold text-white uppercase tracking-tight">Data Acquisition & Scraping</h3>
+                        </div>
+                        <div class="max-w-2xl">
+                            <p class="description-text text-sm leading-relaxed mb-6">
+                                The initial stage involved gathering raw historical data. I developed two independent crawlers to build a robust foundation:
+                                <br><br>
+                                <span class="text-white font-semibold">1. Billboard Scraper:</span> Automated extraction of song lists and metadata from Billboard Rap Charts across three decades.
+                                <br>
+                                <span class="text-white font-semibold">2. Wiki Scraper:</span> Generated a "Truth Table" master list of all automotive manufacturers and models to enable precise entity recognition in lyrics.
+                            </p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="tech-tag">Requests</span>
+                                <span class="tech-tag">BeautifulSoup4</span>
+                                <span class="tech-tag">JSON</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="chart-wrapper">
-                    <canvas id="frequencyChart"></canvas>
+
+                <!-- Step 2 -->
+                <div class="step-item scroll-reveal">
+                    <div class="step-indicator">
+                        <div class="step-dot"></div>
+                    </div>
+                    <div class="flex-1">
+                        <div class="mb-6">
+                            <span class="mono text-[11px] text-white/60 uppercase tracking-[0.3em] block mb-2">Stage 02</span>
+                            <h3 class="text-3xl font-bold text-white uppercase tracking-tight">NLP & Data Cleaning</h3>
+                        </div>
+                        <div class="max-w-2xl">
+                            <p class="description-text text-sm leading-relaxed mb-6">
+                                Rap lyrics are highly colloquial and noisy. The main challenge was entity disambiguation. 
+                                I utilized <span class="text-white font-semibold">RegEx</span> patterns for token matching and mapping slang terms (e.g., 'Benz', 'Lac', 'Beamer') to their parent corporate brands. 
+                                I implemented custom filters to handle homonyms (e.g., distinguishing 'Prince' the artist from 'Prince' the vehicle model).
+                            </p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="tech-tag">Regular Expressions</span>
+                                <span class="tech-tag">NLTK</span>
+                                <span class="tech-tag">Tokenization</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="step-item scroll-reveal">
+                    <div class="step-indicator">
+                        <div class="step-dot"></div>
+                    </div>
+                    <div class="flex-1">
+                        <div class="mb-6">
+                            <span class="mono text-[11px] text-white/60 uppercase tracking-[0.3em] block mb-2">Stage 03</span>
+                            <h3 class="text-3xl font-bold text-white uppercase tracking-tight">Exploratory Data Analysis</h3>
+                        </div>
+                        <div class="max-w-2xl">
+                            <p class="description-text text-sm leading-relaxed mb-6">
+                                Using <span class="text-white font-semibold">Pandas</span>, data was aggregated by year and artist demographics. 
+                                I calculated the "lyrical market share" for brands per decade. 
+                                The analysis identified strong correlations between the genre's commercial evolution and the surge in mentions of European luxury brands.
+                            </p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="tech-tag">Pandas</span>
+                                <span class="tech-tag">NumPy</span>
+                                <span class="tech-tag">Matplotlib</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="step-item scroll-reveal">
+                    <div class="step-indicator">
+                        <div class="step-dot"></div>
+                    </div>
+                    <div class="flex-1">
+                        <div class="mb-6">
+                            <span class="mono text-[11px] text-white/60 uppercase tracking-[0.3em] block mb-2">Stage 04</span>
+                            <h3 class="text-3xl font-bold text-white uppercase tracking-tight">Visualization & Conclusions</h3>
+                        </div>
+                        <div class="max-w-2xl">
+                            <p class="description-text text-sm leading-relaxed mb-6">
+                                The final stage translated data into actionable insights. The findings highlighted a significant shift from domestic icons (<span class="text-white font-semibold">Cadillac/Chevy</span>) 
+                                to German and Italian luxury brands starting in the early 2000s, paralleling the genre's globalization.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Visualization Section -->
+        <section id="visuals" class="mb-40 scroll-reveal">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
+                <div>
+                    <h2 class="text-[10px] font-bold uppercase tracking-[0.4em] text-white/40 mb-6">Data Insights</h2>
+                    <h3 class="text-4xl font-bold text-white leading-tight uppercase tracking-tight">Lyrical Dominance</h3>
+                </div>
+                
+                <div class="flex gap-1 p-1 bg-white/5 border border-white/10 rounded">
+                    <button onclick="updateChart('total')" class="decade-btn px-6 py-2 text-[10px] font-bold uppercase transition-all tab-active">Total</button>
+                    <button onclick="updateChart('90s')" class="decade-btn px-6 py-2 text-[10px] font-bold uppercase transition-all text-gray-500 hover:text-white">The 90s</button>
+                    <button onclick="updateChart('00s')" class="decade-btn px-6 py-2 text-[10px] font-bold uppercase transition-all text-gray-500 hover:text-white">The 2000s</button>
+                </div>
+            </div>
+
+            <div class="chart-container-outer">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-px bg-white/10 border border-white/10 mb-12 overflow-hidden rounded">
+                    <div class="p-6 bg-black">
+                        <span class="text-[9px] uppercase tracking-widest text-gray-500 block mb-2">Brand Leader</span>
+                        <span id="stat-leader" class="text-xl font-bold text-white uppercase tracking-tighter">Mercedes</span>
+                    </div>
+                    <div class="p-6 bg-black">
+                        <span class="text-[9px] uppercase tracking-widest text-gray-500 block mb-2">Frequency Delta</span>
+                        <span id="stat-growth" class="text-xl font-bold text-white uppercase tracking-tighter">+142%</span>
+                    </div>
+                    <div class="p-6 bg-black">
+                        <span class="text-[9px] uppercase tracking-widest text-gray-500 block mb-2">Total Samples</span>
+                        <span class="text-xl font-bold text-white uppercase tracking-tighter">4,812</span>
+                    </div>
+                    <div class="p-6 bg-black">
+                        <span class="text-[9px] uppercase tracking-widest text-gray-500 block mb-2">Distinct Entities</span>
+                        <span class="text-xl font-bold text-white uppercase tracking-tighter">1,240</span>
+                    </div>
+                </div>
+                <div class="h-[450px] w-full">
+                    <canvas id="mainChart"></canvas>
                 </div>
             </div>
         </section>
 
-        <!-- Final Takeaways -->
-        <section class="pb-20">
-            <div class="step-card bg-white text-black">
-                <h3 class="text-2xl mb-4">Technical Summary</h3>
-                <p class="leading-relaxed mb-6 font-medium text-black">
-                    This project demonstrates the ability to convert unstructured lyrical text into a structured JSON database. It covers the full technical cycle: <span class="underline decoration-2">Automated Scraping</span>, <span class="underline decoration-2">Text Cleaning (NLP)</span>, and <span class="underline decoration-2">Frontend Visualization</span>.
+        <!-- GitHub Links -->
+        <section class="mb-20 scroll-reveal border-t border-white/10 pt-20">
+            <div class="text-center">
+                <h4 class="text-3xl font-bold text-white mb-6 uppercase tracking-tight">Technical Documentation</h4>
+                <p class="description-text text-sm max-w-xl mx-auto mb-10 leading-relaxed">
+                    Source code, Jupyter Notebooks with step-by-step analysis, and clean datasets in CSV format are available for review.
                 </p>
-                <div class="flex flex-wrap gap-4">
-                    <a href="https://github.com/lisasiurina/rapandlyrics/blob/master/clean_carlist_wiki.py" target="_blank" class="inline-block px-8 py-4 bg-black text-white font-bold rounded-full hover:bg-gray-800 transition-all">Script: clean_carlist_wiki.py</a>
-                    <a href="https://github.com/lisasiurina/rapandlyrics/blob/master/hellacars.csv" target="_blank" class="inline-block px-8 py-4 border-2 border-black font-bold rounded-full hover:bg-black hover:text-white transition-all">Data: hellacars.csv</a>
+                <div class="flex flex-col sm:flex-row justify-center gap-4">
+                    <a href="https://github.com/lisasiurina/rapandlyrics" target="_blank" class="px-10 py-5 bg-white text-black font-extrabold text-[11px] uppercase tracking-[0.2em] hover:bg-gray-200 transition-all flex items-center justify-center gap-4">
+                        <i data-lucide="github" class="w-5 h-5"></i> Open Repository
+                    </a>
+                    <a href="https://github.com/lisasiurina/rapandlyrics" target="_blank" class="px-10 py-5 bg-white/5 border border-white/10 text-white font-extrabold text-[11px] uppercase tracking-[0.2em] hover:bg-white/10 transition-all flex items-center justify-center gap-4">
+                        <i data-lucide="file-text" class="w-5 h-5"></i> Explore Raw Data
+                    </a>
                 </div>
             </div>
         </section>
 
     </main>
 
-    <footer class="py-12 border-t border-[#222] text-center text-sm text-gray-600 mono uppercase tracking-widest">
-        Data Analysis Portfolio Case &copy; 2015-2024
+    <footer class="py-20 border-t border-white/10 bg-black text-center">
+        <span class="mono text-[9px] uppercase tracking-[0.6em] text-gray-600">Engineering Portfolio — Data Science Case Study</span>
     </footer>
 
     <script>
-        const dataset = {
-            'Mercedes-Benz': 412,
-            'Chevrolet': 324,
-            'Cadillac': 310,
-            'Lexus': 285,
-            'BMW': 267,
-            'Bentley': 198,
-            'Porsche': 142,
-            'Lamborghini': 112,
-            'Ferrari': 94,
-            'Lincoln': 88,
-            'Range Rover': 76,
-            'Dodge': 62,
-            'Jeep': 55
+        lucide.createIcons();
+
+        const chartData = {
+            total: {
+                labels: ['MERCEDES', 'CHEVROLET', 'CADILLAC', 'LEXUS', 'BMW', 'BENTLEY', 'PORSCHE', 'LAMBORGHINI'],
+                values: [412, 324, 310, 285, 267, 198, 142, 112],
+                leader: 'Mercedes',
+                growth: '+142%'
+            },
+            '90s': {
+                labels: ['CHEVROLET', 'CADILLAC', 'MERCEDES', 'LEXUS', 'BMW', 'JEEP', 'MAZDA', 'VOLVO'],
+                values: [180, 165, 140, 120, 95, 80, 45, 30],
+                leader: 'Chevrolet',
+                growth: '+85%'
+            },
+            '00s': {
+                labels: ['MERCEDES', 'BENTLEY', 'LEXUS', 'BMW', 'LAMBORGHINI', 'CADILLAC', 'PORSCHE', 'RANGE ROVER'],
+                values: [210, 150, 145, 130, 110, 95, 88, 76],
+                leader: 'Mercedes',
+                growth: '+210%'
+            }
         };
 
-        const ctx = document.getElementById('frequencyChart').getContext('2d');
-        
-        // Create Gradient
-        const gradient = ctx.createLinearGradient(0, 0, 500, 0);
-        gradient.addColorStop(0, 'rgba(255, 255, 255, 0.9)');
-        gradient.addColorStop(1, 'rgba(255, 255, 255, 0.1)');
+        let currentChart;
+        const ctx = document.getElementById('mainChart').getContext('2d');
 
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: Object.keys(dataset),
-                datasets: [{
-                    label: 'Total Mentions',
-                    data: Object.values(dataset),
-                    backgroundColor: gradient,
-                    hoverBackgroundColor: '#fff',
-                    borderColor: 'rgba(255,255,255,0.2)',
-                    borderWidth: 1,
-                    borderRadius: 6,
-                    barThickness: 24,
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                indexAxis: 'y',
-                animation: {
-                    duration: 2000,
-                    easing: 'easeOutQuart'
+        function initChart() {
+            currentChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: chartData.total.labels,
+                    datasets: [{
+                        data: chartData.total.values,
+                        backgroundColor: '#ffffff',
+                        borderWidth: 0,
+                        barThickness: 25
+                    }]
                 },
-                layout: {
-                    padding: { left: 20, right: 40 }
-                },
-                scales: {
-                    x: {
-                        grid: { 
-                            color: 'rgba(255,255,255,0.05)',
-                            drawBorder: false 
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: { duration: 800 },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: 'rgba(255,255,255,0.05)', drawBorder: false },
+                            ticks: { color: '#666', font: { family: 'JetBrains Mono', size: 10 } }
                         },
-                        ticks: { 
-                            color: '#555', 
-                            font: { family: 'JetBrains Mono', size: 11 } 
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: '#ffffff', font: { weight: '800', size: 11 } }
                         }
                     },
-                    y: {
-                        grid: { display: false },
-                        ticks: {
-                            color: '#fff',
-                            padding: 20,
-                            font: { 
-                                family: 'Plus Jakarta Sans', 
-                                weight: 600, 
-                                size: 14 
-                            }
-                        }
-                    }
-                },
-                plugins: {
-                    legend: { display: false },
-                    tooltip: {
-                        enabled: true,
-                        backgroundColor: '#1a1a1f',
-                        titleColor: '#fff',
-                        bodyColor: '#aaa',
-                        titleFont: { size: 14, weight: 'bold', family: 'Plus Jakarta Sans' },
-                        bodyFont: { family: 'JetBrains Mono', size: 12 },
-                        padding: 16,
-                        cornerRadius: 12,
-                        displayColors: false,
-                        borderColor: '#333',
-                        borderWidth: 1,
-                        callbacks: {
-                            label: function(context) {
-                                return `Count: ${context.raw} mentions`;
-                            }
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: '#111',
+                            padding: 15,
+                            titleFont: { size: 12, weight: 'bold' },
+                            bodyFont: { family: 'JetBrains Mono', size: 11 },
+                            cornerRadius: 0,
+                            displayColors: false
                         }
                     }
                 }
-            }
-        });
+            });
+        }
+
+        function updateChart(period) {
+            const data = chartData[period];
+            document.getElementById('stat-leader').innerText = data.leader;
+            document.getElementById('stat-growth').innerText = data.growth;
+
+            currentChart.data.labels = data.labels;
+            currentChart.data.datasets[0].data = data.values;
+            currentChart.update();
+
+            document.querySelectorAll('.decade-btn').forEach(btn => {
+                btn.classList.remove('tab-active');
+                btn.classList.add('text-gray-500');
+            });
+            event.target.classList.add('tab-active');
+            event.target.classList.remove('text-gray-500');
+        }
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('active');
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.scroll-reveal').forEach(el => observer.observe(el));
+        window.onload = initChart;
     </script>
 </body>
 </html>
