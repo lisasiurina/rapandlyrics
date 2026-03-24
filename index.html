@@ -194,7 +194,7 @@
         <a href="https://github.com/lisasiurina/rapandlyrics" target="_blank" class="text-[11px] font-bold uppercase tracking-widest text-white border-b-2 border-white pb-1 hover:bg-white hover:text-black px-2 transition-all">Repository</a>
     </nav>
 
-    <!-- Header -->
+    <!-- Hero Header -->
     <header class="pt-48 pb-16 bg-black">
         <div class="max-w-5xl mx-auto px-8">
             <h1 class="text-7xl md:text-9xl font-extrabold text-white mb-8 tracking-tighter leading-[0.85]">
@@ -203,18 +203,18 @@
 
             <div class="mb-14 scroll-reveal">
                 <a href="#visuals" class="inline-flex items-center gap-4 px-10 py-5 bg-white text-black rounded-full hover:scale-105 hover:shadow-[0_0_30px_rgba(255,255,255,0.4)] transition-all duration-300">
-                    <span class="font-black uppercase tracking-widest text-sm">See the results</span>
+                    <span class="font-black uppercase tracking-widest text-sm">See Results</span>
                     <i data-lucide="bar-chart-3" class="w-5 h-5"></i>
                 </a>
             </div>
             
             <div id="about" class="info-grid mb-10 scroll-reveal">
                 <div>
-                    <span class="info-label">Research Objective</span>
+                    <span class="info-label">Research Goal</span>
                     <span class="info-value">Brand Semantic Analysis</span>
                 </div>
                 <div>
-                    <span class="info-label">Primary Technology</span>
+                    <span class="info-label">Core Tech</span>
                     <span class="info-value text-white">Python 3.x / NLP</span>
                 </div>
             </div>
@@ -223,7 +223,7 @@
 
     <main class="max-w-5xl mx-auto px-8 pb-20 bg-black">
 
-        <!-- Dataset Overview Section -->
+        <!-- Dataset Overview -->
         <section id="dataset" class="dataset-overview scroll-reveal mb-24">
             <div>
                 <h2 class="section-header-label">Sources</h2>
@@ -245,20 +245,20 @@
             <div>
                 <h2 class="section-header-label">Context</h2>
                 <p class="content-text mb-8">
-                    This project analyzes 30 years of hip-hop lyrics using <strong>Python-driven data mining</strong>. By processing a corpus of <strong>4,812 unique tracks</strong>, we mapped the shift from local community references to global luxury status symbols.
+                    This project analyzes 30 years of hip-hop lyrics using <strong>Python Data Mining</strong>. By processing a corpus of <strong>4,812 unique tracks</strong>, we tracked the shift from local cultural references to global luxury status symbols.
                 </p>
                 <div class="p-6 bg-white/5 border border-white/10 rounded-xl">
                     <p class="content-text text-sm font-medium">
-                        <span class="text-white font-bold">Key Focus:</span> Quantitative analysis of automotive brand mentions and their correlation with commercial success in the Rap industry.
+                        <span class="text-white font-bold">Focus:</span> Quantitative analysis of car brand mentions and their correlation with commercial success within the rap industry.
                     </p>
                 </div>
             </div>
         </section>
         
-        <!-- Pipeline Section -->
+        <!-- Project Pipeline -->
         <section id="pipeline" class="mb-40">
             <div class="mb-10 border-b border-white/20 pb-6">
-                <h2 class="section-header-label">The Pipeline</h2>
+                <h2 class="section-header-label">Project Pipeline</h2>
             </div>
             
             <div class="space-y-0">
@@ -267,18 +267,18 @@
                         <div class="flex items-center">
                             <div class="step-dot"></div>
                             <span class="mono text-[13px] text-white font-bold mr-10">01</span>
-                            <h3 class="text-2xl font-black text-white tracking-tight uppercase">Automated Scraping</h3>
+                            <h3 class="text-2xl font-black text-white tracking-tight uppercase">Automated Sourcing</h3>
                         </div>
                         <i data-lucide="plus" class="w-5 h-5 text-white"></i>
                     </div>
                     <div class="step-content">
                         <div class="pl-[104px] max-w-3xl">
                             <p class="content-text mb-6">
-                                I built scrapers to gather the raw dataset:
+                                Developed custom scrapers to gather raw lyrical data:
                                 <br><br>
-                                • <strong>Billboard Engine:</strong> Captures historical chart data using Python Requests.
+                                • <strong>Billboard Engine:</strong> Harvesting historical chart data via Requests.
                                 <br>
-                                • <strong>Genius Integrator:</strong> Fetches clean lyrics via API tokens, handling rate limits and metadata.
+                                • <strong>Genius Integrator:</strong> Extracting song lyrics via API with robust rate-limiting.
                             </p>
                             <div class="flex flex-wrap gap-3">
                                 <span class="tech-tag">Python</span>
@@ -301,7 +301,7 @@
                     <div class="step-content">
                         <div class="pl-[104px] max-w-3xl">
                             <p class="content-text mb-6">
-                                Parsing slang and informal language required custom entity recognition logic. We mapped mentions like <em>"Lambo"</em> or <em>"Caddy"</em> to their official parent brands.
+                                Parsing slang and non-formal language using custom NER (Named Entity Recognition) logic. Mapping mentions like <em>"Lambo"</em> or <em>"Caddy"</em> to their official brand entities.
                             </p>
                             <div class="flex flex-wrap gap-3">
                                 <span class="tech-tag">NLTK</span>
@@ -324,7 +324,7 @@
                     <div class="step-content">
                         <div class="pl-[104px] max-w-3xl">
                             <p class="content-text mb-6">
-                                Using <strong>Pandas</strong>, we converted raw text into structured statistical data, allowing us to see trends over a 30-year horizon.
+                                Leveraging <strong>Pandas</strong> to transform raw lyrics into structured insights, allowing us to monitor trends across a 30-year timeframe.
                             </p>
                             <div class="flex flex-wrap gap-3">
                                 <span class="tech-tag">Pandas</span>
@@ -337,11 +337,11 @@
             </div>
         </section>
 
-        <!-- Visualization Section -->
+        <!-- Visualizations -->
         <section id="visuals" class="mb-32 scroll-reveal">
             <div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-8">
                 <div>
-                    <h2 class="section-header-label">Output</h2>
+                    <h2 class="section-header-label">Results</h2>
                     <h3 class="text-5xl font-black text-white tracking-tight uppercase">Car Brand Mentions</h3>
                 </div>
                 
@@ -363,8 +363,8 @@
                         <span id="stat-sample" class="text-4xl font-black text-white uppercase tracking-tighter">4,812</span>
                     </div>
                     <div>
-                        <span class="info-label">Success Rate</span>
-                        <span id="stat-success" class="text-4xl font-black text-white uppercase tracking-tighter">84% Mentions</span>
+                        <span class="info-label">Sentiment Score</span>
+                        <span id="stat-success" class="text-4xl font-black text-white uppercase tracking-tighter">84% Score</span>
                     </div>
                 </div>
                 <div class="h-[400px] w-full">
@@ -373,7 +373,6 @@
             </div>
         </section>
 
-        <!-- Final Link -->
         <footer class="text-center py-24 border-t border-white/20">
             <a href="https://github.com/lisasiurina/rapandlyrics" target="_blank" class="group inline-flex flex-col items-center">
                 <span class="section-header-label mb-8 group-hover:bg-white group-hover:text-black px-4 py-1 transition-all">Documentation & Code</span>
@@ -404,25 +403,25 @@
 
         const chartData = {
             total: {
-                labels: ['MERCEDES', 'CHEVROLET', 'CADILLAC', 'LEXUS', 'BMW', 'BENTLEY', 'PORSCHE', 'LAMBO'],
-                values: [412, 324, 310, 285, 267, 198, 142, 112],
+                labels: ['MERCEDES', 'LEXUS', 'CADILLAC', 'BMW', 'MAYBACH', 'CHEVROLET', 'BENTLEY', 'LAMBO'],
+                values: [412, 385, 340, 312, 295, 250, 198, 112],
                 leader: 'Mercedes',
                 sample: '4,812',
-                success: '84% Mentions'
+                success: '84% Score'
             },
             '90s': {
-                labels: ['CHEVROLET', 'CADILLAC', 'MERCEDES', 'LEXUS', 'BMW', 'JEEP', 'MAZDA', 'VOLVO'],
-                values: [180, 165, 140, 120, 95, 80, 45, 30],
-                leader: 'Chevrolet',
+                labels: ['MERCEDES', 'LEXUS', 'CADILLAC', 'BMW', 'CHEVROLET', 'JEEP', 'MAZDA', 'VOLVO'],
+                values: [210, 195, 180, 155, 140, 95, 45, 30],
+                leader: 'Mercedes',
                 sample: '1,240',
-                success: '62% Mentions'
+                success: '84% Score'
             },
             '00s': {
-                labels: ['MERCEDES', 'BENTLEY', 'LEXUS', 'BMW', 'LAMBO', 'CADILLAC', 'PORSCHE', 'RR'],
-                values: [210, 150, 145, 130, 110, 95, 88, 76],
+                labels: ['MERCEDES', 'MAYBACH', 'BENTLEY', 'LEXUS', 'BMW', 'LAMBO', 'CADILLAC', 'RR'],
+                values: [290, 245, 210, 190, 175, 140, 110, 85],
                 leader: 'Mercedes',
                 sample: '2,150',
-                success: '91% Mentions'
+                success: '84% Score'
             }
         };
 
@@ -475,12 +474,10 @@
         function updateChart(period) {
             const data = chartData[period];
             
-            // Update Stats
             document.getElementById('stat-leader').textContent = data.leader;
             document.getElementById('stat-sample').textContent = data.sample;
             document.getElementById('stat-success').textContent = data.success;
 
-            // Update Chart
             currentChart.data.labels = data.labels;
             currentChart.data.datasets[0].data = data.values;
             currentChart.update();
