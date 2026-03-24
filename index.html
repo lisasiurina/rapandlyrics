@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RAP & AUTO: DATA MINING REPORT</title>
+    <title>RAP & CARS: DATA MINING REPORT</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -13,15 +13,17 @@
         :root {
             --bg: #000000;
             --accent: #ffffff;
-            --border: #1a1a1a;
+            --border: rgba(255, 255, 255, 0.15);
         }
 
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
             background-color: var(--bg);
-            color: #e2e2e7; /* Улучшенная общая читаемость */
+            color: #ffffff; 
             line-height: 1.6;
             overflow-x: hidden;
+            scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
         }
 
         * { font-style: normal !important; }
@@ -29,7 +31,7 @@
         .mono { font-family: 'JetBrains Mono', monospace; }
 
         .chart-container-outer {
-            background: #050505;
+            background: #080808;
             padding: 2.5rem;
             border-radius: 1.5rem;
             border: 1px solid var(--border);
@@ -52,306 +54,375 @@
         }
 
         .tech-tag {
-            background: #111;
-            border: 1px solid #333;
-            padding: 4px 10px;
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 5px 12px;
             border-radius: 4px;
-            font-size: 10px;
+            font-size: 11px;
             font-family: 'JetBrains Mono', monospace;
-            color: #bbb;
+            color: #ffffff;
+            font-weight: 500;
         }
 
-        /* Fixed Pipeline Structure */
-        .pipeline-wrapper {
-            position: relative;
+        .info-grid {
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            padding: 2.5rem 0;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
         }
 
-        .pipeline-line {
-            position: absolute;
-            left: 7px; 
-            top: 0;
-            bottom: 0;
-            width: 1px;
-            background: linear-gradient(180deg, transparent, #444 10%, #444 90%, transparent);
-            z-index: 0;
+        .info-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.25em;
+            color: #e0e0e0; 
+            margin-bottom: 0.75rem;
+            display: block;
+            font-weight: 600;
+        }
+
+        .info-value {
+            font-size: 18px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #ffffff;
+        }
+
+        .section-header-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.4em;
+            color: #ffffff;
+            border-left: 3px solid #fff;
+            padding-left: 15px;
+            margin-bottom: 2rem;
+        }
+
+        .dataset-overview {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 4rem;
+            padding: 5rem 0;
+            border-bottom: 1px solid var(--border);
         }
 
         .step-item {
-            display: flex;
-            gap: 2.5rem;
-            position: relative;
-            z-index: 1;
+            cursor: pointer;
+            padding: 2.5rem 0;
+            border-bottom: 1px solid var(--border);
+            transition: all 0.3s ease;
         }
 
-        .step-indicator {
-            flex-shrink: 0;
-            width: 15px;
-            position: relative;
+        .step-item:hover {
+            background: rgba(255,255,255,0.03);
+            padding-left: 1rem;
         }
 
         .step-dot {
-            width: 15px;
-            height: 15px;
-            background: #fff;
+            width: 12px;
+            height: 12px;
+            background: #333;
+            border: 2px solid #888;
             border-radius: 50%;
-            box-shadow: 0 0 20px rgba(255,255,255,0.8);
-            margin-top: 0.75rem; /* Выравнивание по первой строке заголовка */
+            display: inline-block;
+            margin-right: 1.5rem;
+            transition: all 0.4s ease;
+            vertical-align: middle;
         }
 
-        ::-webkit-scrollbar { width: 6px; }
+        .is-open .step-dot {
+            background: #fff;
+            border-color: #fff;
+            box-shadow: 0 0 15px rgba(255,255,255,0.8);
+        }
+
+        .step-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0;
+        }
+
+        .is-open .step-content {
+            max-height: 800px;
+            opacity: 1;
+            padding-top: 1.5rem;
+        }
+
+        .content-text {
+            color: #eeeeee; 
+            font-size: 17px;
+            line-height: 1.7;
+            font-weight: 400;
+        }
+
+        .content-text strong {
+            color: #ffffff;
+            font-weight: 800;
+            background: rgba(255,255,255,0.1);
+            padding: 0 4px;
+        }
+
+        ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-track { background: #000; }
-        ::-webkit-scrollbar-thumb { background: #1a1a1a; border-radius: 10px; }
-        
-        .description-text {
-            color: #a1a1aa; /* Более яркий серый для читаемости */
+        ::-webkit-scrollbar-thumb { background: #555; }
+
+        @media (max-width: 768px) {
+            .dataset-overview { grid-template-columns: 1fr; gap: 3rem; }
+            .info-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
 
     <!-- Navigation -->
-    <nav class="fixed top-0 w-full z-50 px-6 py-4 flex justify-between items-center border-b border-white/5 backdrop-blur-md bg-black/80">
+    <nav class="fixed top-0 w-full z-50 px-8 py-6 flex justify-between items-center bg-black/95 backdrop-blur-xl border-b border-white/20">
         <div class="flex items-center gap-2">
-            <div class="w-8 h-8 bg-white rounded flex items-center justify-center">
-                <i data-lucide="database" class="text-black w-5 h-5"></i>
-            </div>
-            <span class="font-bold tracking-tighter text-white uppercase">RAP & AUTO</span>
+            <span class="font-bold tracking-tighter text-white uppercase text-base">RAP & AUTO / DATA RESEARCH</span>
         </div>
-        <div class="hidden md:flex gap-8 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">
-            <a href="#pipeline" class="hover:text-white transition-colors">Steps</a>
-            <a href="#visuals" class="hover:text-white transition-colors">Results</a>
-            <a href="https://github.com/lisasiurina/rapandlyrics" target="_blank" class="hover:text-white transition-colors">Code</a>
+        <div class="hidden md:flex gap-12 text-[11px] font-bold uppercase tracking-[0.4em] text-white">
+            <a href="#dataset" class="hover:underline underline-offset-8 decoration-2 transition-all">Dataset</a>
+            <a href="#pipeline" class="hover:underline underline-offset-8 decoration-2 transition-all">Methods</a>
+            <a href="#visuals" class="hover:underline underline-offset-8 decoration-2 transition-all">Output</a>
         </div>
-        <div class="flex items-center gap-4">
-            <span class="tech-tag hidden sm:block">Python 3.9</span>
-            <div class="h-4 w-px bg-white/10 hidden sm:block"></div>
-            <a href="https://github.com/lisasiurina/rapandlyrics" target="_blank" class="text-[10px] font-bold uppercase tracking-widest text-white hover:opacity-70">Github</a>
-        </div>
+        <a href="https://github.com/lisasiurina/rapandlyrics" target="_blank" class="text-[11px] font-bold uppercase tracking-widest text-white border-b-2 border-white pb-1 hover:bg-white hover:text-black px-2 transition-all">Repository</a>
     </nav>
 
     <!-- Header -->
-    <header class="relative pt-48 pb-32 bg-black overflow-hidden">
-        <div class="max-w-4xl mx-auto px-6 relative z-10">
-            <div class="inline-flex items-center gap-2 px-3 py-1 bg-white/5 border border-white/10 text-[10px] font-bold uppercase tracking-widest mb-8">
-                <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>
-                End-to-End Data Engineering Case Study
-            </div>
-            <h1 class="text-6xl md:text-8xl font-extrabold text-white mb-8 tracking-tighter leading-none">
-                LYRIC DATA <br><span class="text-gray-700">MINING</span>
+    <header class="pt-48 pb-16 bg-black">
+        <div class="max-w-5xl mx-auto px-8">
+            <h1 class="text-7xl md:text-9xl font-extrabold text-white mb-8 tracking-tighter leading-[0.85]">
+                LYRIC DATA <br><span class="text-white/30">MINING</span>
             </h1>
-            <p class="text-xl text-gray-400 font-light leading-relaxed mb-12 max-w-2xl">
-                Exploring 35 years of Hip-Hop history through the lens of automotive brands. A full lifecycle project: from custom web scraping to cultural trend visualization.
-            </p>
-            <div class="flex flex-wrap gap-12">
+
+            <div class="mb-14 scroll-reveal">
+                <a href="#visuals" class="inline-flex items-center gap-4 px-10 py-5 bg-white text-black rounded-full hover:scale-105 hover:shadow-[0_0_30px_rgba(255,255,255,0.4)] transition-all duration-300">
+                    <span class="font-black uppercase tracking-widest text-sm">See the results</span>
+                    <i data-lucide="bar-chart-3" class="w-5 h-5"></i>
+                </a>
+            </div>
+            
+            <div id="about" class="info-grid mb-10 scroll-reveal">
                 <div>
-                    <span class="text-[10px] uppercase tracking-widest text-gray-500 block mb-2">Dataset Size</span>
-                    <span class="text-2xl font-bold text-white uppercase">4.8K Tracks</span>
+                    <span class="info-label">Research Objective</span>
+                    <span class="info-value">Brand Semantic Analysis</span>
                 </div>
                 <div>
-                    <span class="text-[10px] uppercase tracking-widest text-gray-500 block mb-2">Brand Entities</span>
-                    <span class="text-2xl font-bold text-white uppercase">85 Manufacturers</span>
-                </div>
-                <div>
-                    <span class="text-[10px] uppercase tracking-widest text-gray-500 block mb-2">Timeline</span>
-                    <span class="text-2xl font-bold text-white uppercase">1980 — 2015</span>
+                    <span class="info-label">Primary Technology</span>
+                    <span class="info-value text-white">Python 3.x / NLP</span>
                 </div>
             </div>
         </div>
     </header>
 
-    <main class="max-w-4xl mx-auto px-6 py-20 bg-black">
+    <main class="max-w-5xl mx-auto px-8 pb-20 bg-black">
+
+        <!-- Dataset Overview Section -->
+        <section id="dataset" class="dataset-overview scroll-reveal mb-24">
+            <div>
+                <h2 class="section-header-label">Sources</h2>
+                <div class="space-y-8">
+                    <div>
+                        <span class="block text-3xl font-black text-white mb-1">Billboard</span>
+                        <span class="text-xs text-white uppercase tracking-[0.2em] font-bold mono bg-white/10 px-2 py-1">Rap Tracks</span>
+                    </div>
+                    <div>
+                        <span class="block text-3xl font-black text-white mb-1">Genius API</span>
+                        <span class="text-xs text-white uppercase tracking-[0.2em] font-bold mono bg-white/10 px-2 py-1">Lyric Database</span>
+                    </div>
+                    <div class="pt-6 border-t border-white/20">
+                        <span class="info-label">Timeframe</span>
+                        <span class="text-3xl font-bold text-white mono">1985 — 2015</span>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <h2 class="section-header-label">Context</h2>
+                <p class="content-text mb-8">
+                    This project analyzes 30 years of hip-hop lyrics using <strong>Python-driven data mining</strong>. By processing a corpus of <strong>4,812 unique tracks</strong>, we mapped the shift from local community references to global luxury status symbols.
+                </p>
+                <div class="p-6 bg-white/5 border border-white/10 rounded-xl">
+                    <p class="content-text text-sm font-medium">
+                        <span class="text-white font-bold">Key Focus:</span> Quantitative analysis of automotive brand mentions and their correlation with commercial success in the Rap industry.
+                    </p>
+                </div>
+            </div>
+        </section>
         
-        <!-- Vertical Pipeline -->
-        <section id="pipeline" class="mb-48">
-            <h2 class="text-[10px] font-bold uppercase tracking-[0.4em] text-white/60 mb-20 border-l-2 border-white pl-4">Project Stages</h2>
+        <!-- Pipeline Section -->
+        <section id="pipeline" class="mb-40">
+            <div class="mb-10 border-b border-white/20 pb-6">
+                <h2 class="section-header-label">The Pipeline</h2>
+            </div>
             
-            <div class="pipeline-wrapper space-y-32">
-                <div class="pipeline-line"></div>
-
-                <!-- Step 1 -->
-                <div class="step-item scroll-reveal">
-                    <div class="step-indicator">
-                        <div class="step-dot"></div>
-                    </div>
-                    <div class="flex-1">
-                        <div class="mb-6">
-                            <span class="mono text-[11px] text-white/60 uppercase tracking-[0.3em] block mb-2">Stage 01</span>
-                            <h3 class="text-3xl font-bold text-white uppercase tracking-tight">Data Acquisition & Scraping</h3>
+            <div class="space-y-0">
+                <div class="step-item scroll-reveal" onclick="toggleStep(this)">
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center">
+                            <div class="step-dot"></div>
+                            <span class="mono text-[13px] text-white font-bold mr-10">01</span>
+                            <h3 class="text-2xl font-black text-white tracking-tight uppercase">Automated Scraping</h3>
                         </div>
-                        <div class="max-w-2xl">
-                            <p class="description-text text-sm leading-relaxed mb-6">
-                                The initial stage involved gathering raw historical data. I developed two independent crawlers to build a robust foundation:
+                        <i data-lucide="plus" class="w-5 h-5 text-white"></i>
+                    </div>
+                    <div class="step-content">
+                        <div class="pl-[104px] max-w-3xl">
+                            <p class="content-text mb-6">
+                                I built scrapers to gather the raw dataset:
                                 <br><br>
-                                <span class="text-white font-semibold">1. Billboard Scraper:</span> Automated extraction of song lists and metadata from Billboard Rap Charts across three decades.
+                                • <strong>Billboard Engine:</strong> Captures historical chart data using Python Requests.
                                 <br>
-                                <span class="text-white font-semibold">2. Wiki Scraper:</span> Generated a "Truth Table" master list of all automotive manufacturers and models to enable precise entity recognition in lyrics.
+                                • <strong>Genius Integrator:</strong> Fetches clean lyrics via API tokens, handling rate limits and metadata.
                             </p>
-                            <div class="flex flex-wrap gap-2">
-                                <span class="tech-tag">Requests</span>
+                            <div class="flex flex-wrap gap-3">
+                                <span class="tech-tag">Python</span>
                                 <span class="tech-tag">BeautifulSoup4</span>
-                                <span class="tech-tag">JSON</span>
+                                <span class="tech-tag">REST API</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Step 2 -->
-                <div class="step-item scroll-reveal">
-                    <div class="step-indicator">
-                        <div class="step-dot"></div>
-                    </div>
-                    <div class="flex-1">
-                        <div class="mb-6">
-                            <span class="mono text-[11px] text-white/60 uppercase tracking-[0.3em] block mb-2">Stage 02</span>
-                            <h3 class="text-3xl font-bold text-white uppercase tracking-tight">NLP & Data Cleaning</h3>
+                <div class="step-item scroll-reveal" onclick="toggleStep(this)">
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center">
+                            <div class="step-dot"></div>
+                            <span class="mono text-[13px] text-white font-bold mr-10">02</span>
+                            <h3 class="text-2xl font-black text-white tracking-tight uppercase">NLP Processing</h3>
                         </div>
-                        <div class="max-w-2xl">
-                            <p class="description-text text-sm leading-relaxed mb-6">
-                                Rap lyrics are highly colloquial and noisy. The main challenge was entity disambiguation. 
-                                I utilized <span class="text-white font-semibold">RegEx</span> patterns for token matching and mapping slang terms (e.g., 'Benz', 'Lac', 'Beamer') to their parent corporate brands. 
-                                I implemented custom filters to handle homonyms (e.g., distinguishing 'Prince' the artist from 'Prince' the vehicle model).
+                        <i data-lucide="plus" class="w-5 h-5 text-white"></i>
+                    </div>
+                    <div class="step-content">
+                        <div class="pl-[104px] max-w-3xl">
+                            <p class="content-text mb-6">
+                                Parsing slang and informal language required custom entity recognition logic. We mapped mentions like <em>"Lambo"</em> or <em>"Caddy"</em> to their official parent brands.
                             </p>
-                            <div class="flex flex-wrap gap-2">
-                                <span class="tech-tag">Regular Expressions</span>
+                            <div class="flex flex-wrap gap-3">
                                 <span class="tech-tag">NLTK</span>
-                                <span class="tech-tag">Tokenization</span>
+                                <span class="tech-tag">RegEx</span>
+                                <span class="tech-tag">Text Processing</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Step 3 -->
-                <div class="step-item scroll-reveal">
-                    <div class="step-indicator">
-                        <div class="step-dot"></div>
-                    </div>
-                    <div class="flex-1">
-                        <div class="mb-6">
-                            <span class="mono text-[11px] text-white/60 uppercase tracking-[0.3em] block mb-2">Stage 03</span>
-                            <h3 class="text-3xl font-bold text-white uppercase tracking-tight">Exploratory Data Analysis</h3>
+                <div class="step-item scroll-reveal" onclick="toggleStep(this)">
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center">
+                            <div class="step-dot"></div>
+                            <span class="mono text-[13px] text-white font-bold mr-10">03</span>
+                            <h3 class="text-2xl font-black text-white tracking-tight uppercase">Data Aggregation</h3>
                         </div>
-                        <div class="max-w-2xl">
-                            <p class="description-text text-sm leading-relaxed mb-6">
-                                Using <span class="text-white font-semibold">Pandas</span>, data was aggregated by year and artist demographics. 
-                                I calculated the "lyrical market share" for brands per decade. 
-                                The analysis identified strong correlations between the genre's commercial evolution and the surge in mentions of European luxury brands.
+                        <i data-lucide="plus" class="w-5 h-5 text-white"></i>
+                    </div>
+                    <div class="step-content">
+                        <div class="pl-[104px] max-w-3xl">
+                            <p class="content-text mb-6">
+                                Using <strong>Pandas</strong>, we converted raw text into structured statistical data, allowing us to see trends over a 30-year horizon.
                             </p>
-                            <div class="flex flex-wrap gap-2">
+                            <div class="flex flex-wrap gap-3">
                                 <span class="tech-tag">Pandas</span>
                                 <span class="tech-tag">NumPy</span>
-                                <span class="tech-tag">Matplotlib</span>
+                                <span class="tech-tag">CSV/JSON</span>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <!-- Step 4 -->
-                <div class="step-item scroll-reveal">
-                    <div class="step-indicator">
-                        <div class="step-dot"></div>
-                    </div>
-                    <div class="flex-1">
-                        <div class="mb-6">
-                            <span class="mono text-[11px] text-white/60 uppercase tracking-[0.3em] block mb-2">Stage 04</span>
-                            <h3 class="text-3xl font-bold text-white uppercase tracking-tight">Visualization & Conclusions</h3>
-                        </div>
-                        <div class="max-w-2xl">
-                            <p class="description-text text-sm leading-relaxed mb-6">
-                                The final stage translated data into actionable insights. The findings highlighted a significant shift from domestic icons (<span class="text-white font-semibold">Cadillac/Chevy</span>) 
-                                to German and Italian luxury brands starting in the early 2000s, paralleling the genre's globalization.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
             </div>
         </section>
 
         <!-- Visualization Section -->
-        <section id="visuals" class="mb-40 scroll-reveal">
-            <div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
+        <section id="visuals" class="mb-32 scroll-reveal">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-8">
                 <div>
-                    <h2 class="text-[10px] font-bold uppercase tracking-[0.4em] text-white/40 mb-6">Data Insights</h2>
-                    <h3 class="text-4xl font-bold text-white leading-tight uppercase tracking-tight">Lyrical Dominance</h3>
+                    <h2 class="section-header-label">Output</h2>
+                    <h3 class="text-5xl font-black text-white tracking-tight uppercase">Car Brand Mentions</h3>
                 </div>
                 
-                <div class="flex gap-1 p-1 bg-white/5 border border-white/10 rounded">
-                    <button onclick="updateChart('total')" class="decade-btn px-6 py-2 text-[10px] font-bold uppercase transition-all tab-active">Total</button>
-                    <button onclick="updateChart('90s')" class="decade-btn px-6 py-2 text-[10px] font-bold uppercase transition-all text-gray-500 hover:text-white">The 90s</button>
-                    <button onclick="updateChart('00s')" class="decade-btn px-6 py-2 text-[10px] font-bold uppercase transition-all text-gray-500 hover:text-white">The 2000s</button>
+                <div class="flex gap-1 p-1 bg-white/10 rounded-lg border border-white/20">
+                    <button onclick="updateChart('total')" class="decade-btn px-8 py-3 text-[11px] font-bold uppercase tracking-widest transition-all tab-active rounded-md">Lifetime</button>
+                    <button onclick="updateChart('90s')" class="decade-btn px-8 py-3 text-[11px] font-bold uppercase tracking-widest transition-all text-white/60 hover:text-white rounded-md">90s</button>
+                    <button onclick="updateChart('00s')" class="decade-btn px-8 py-3 text-[11px] font-bold uppercase tracking-widest transition-all text-white/60 hover:text-white rounded-md">00s</button>
                 </div>
             </div>
 
             <div class="chart-container-outer">
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-px bg-white/10 border border-white/10 mb-12 overflow-hidden rounded">
-                    <div class="p-6 bg-black">
-                        <span class="text-[9px] uppercase tracking-widest text-gray-500 block mb-2">Brand Leader</span>
-                        <span id="stat-leader" class="text-xl font-bold text-white uppercase tracking-tighter">Mercedes</span>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mb-10 border-b border-white/10 pb-12">
+                    <div>
+                        <span class="info-label">Market Leader</span>
+                        <span id="stat-leader" class="text-4xl font-black text-white uppercase tracking-tighter">Mercedes</span>
                     </div>
-                    <div class="p-6 bg-black">
-                        <span class="text-[9px] uppercase tracking-widest text-gray-500 block mb-2">Frequency Delta</span>
-                        <span id="stat-growth" class="text-xl font-bold text-white uppercase tracking-tighter">+142%</span>
+                    <div>
+                        <span class="info-label">Sample Size</span>
+                        <span id="stat-sample" class="text-4xl font-black text-white uppercase tracking-tighter">4,812</span>
                     </div>
-                    <div class="p-6 bg-black">
-                        <span class="text-[9px] uppercase tracking-widest text-gray-500 block mb-2">Total Samples</span>
-                        <span class="text-xl font-bold text-white uppercase tracking-tighter">4,812</span>
-                    </div>
-                    <div class="p-6 bg-black">
-                        <span class="text-[9px] uppercase tracking-widest text-gray-500 block mb-2">Distinct Entities</span>
-                        <span class="text-xl font-bold text-white uppercase tracking-tighter">1,240</span>
+                    <div>
+                        <span class="info-label">Success Rate</span>
+                        <span id="stat-success" class="text-4xl font-black text-white uppercase tracking-tighter">84% Mentions</span>
                     </div>
                 </div>
-                <div class="h-[450px] w-full">
+                <div class="h-[400px] w-full">
                     <canvas id="mainChart"></canvas>
                 </div>
             </div>
         </section>
 
-        <!-- GitHub Links -->
-        <section class="mb-20 scroll-reveal border-t border-white/10 pt-20">
-            <div class="text-center">
-                <h4 class="text-3xl font-bold text-white mb-6 uppercase tracking-tight">Technical Documentation</h4>
-                <p class="description-text text-sm max-w-xl mx-auto mb-10 leading-relaxed">
-                    Source code, Jupyter Notebooks with step-by-step analysis, and clean datasets in CSV format are available for review.
-                </p>
-                <div class="flex flex-col sm:flex-row justify-center gap-4">
-                    <a href="https://github.com/lisasiurina/rapandlyrics" target="_blank" class="px-10 py-5 bg-white text-black font-extrabold text-[11px] uppercase tracking-[0.2em] hover:bg-gray-200 transition-all flex items-center justify-center gap-4">
-                        <i data-lucide="github" class="w-5 h-5"></i> Open Repository
-                    </a>
-                    <a href="https://github.com/lisasiurina/rapandlyrics" target="_blank" class="px-10 py-5 bg-white/5 border border-white/10 text-white font-extrabold text-[11px] uppercase tracking-[0.2em] hover:bg-white/10 transition-all flex items-center justify-center gap-4">
-                        <i data-lucide="file-text" class="w-5 h-5"></i> Explore Raw Data
-                    </a>
-                </div>
-            </div>
-        </section>
+        <!-- Final Link -->
+        <footer class="text-center py-24 border-t border-white/20">
+            <a href="https://github.com/lisasiurina/rapandlyrics" target="_blank" class="group inline-flex flex-col items-center">
+                <span class="section-header-label mb-8 group-hover:bg-white group-hover:text-black px-4 py-1 transition-all">Documentation & Code</span>
+                <i data-lucide="github" class="w-12 h-12 text-white transform group-hover:scale-110 transition-all"></i>
+            </a>
+        </footer>
 
     </main>
-
-    <footer class="py-20 border-t border-white/10 bg-black text-center">
-        <span class="mono text-[9px] uppercase tracking-[0.6em] text-gray-600">Engineering Portfolio — Data Science Case Study</span>
-    </footer>
 
     <script>
         lucide.createIcons();
 
+        function toggleStep(element) {
+            const wasOpen = element.classList.contains('is-open');
+            document.querySelectorAll('.step-item').forEach(item => {
+                item.classList.remove('is-open');
+                const icon = item.querySelector('i');
+                if (icon) icon.setAttribute('data-lucide', 'plus');
+            });
+            
+            if (!wasOpen) {
+                element.classList.add('is-open');
+                const icon = element.querySelector('i');
+                if (icon) icon.setAttribute('data-lucide', 'minus');
+            }
+            lucide.createIcons();
+        }
+
         const chartData = {
             total: {
-                labels: ['MERCEDES', 'CHEVROLET', 'CADILLAC', 'LEXUS', 'BMW', 'BENTLEY', 'PORSCHE', 'LAMBORGHINI'],
+                labels: ['MERCEDES', 'CHEVROLET', 'CADILLAC', 'LEXUS', 'BMW', 'BENTLEY', 'PORSCHE', 'LAMBO'],
                 values: [412, 324, 310, 285, 267, 198, 142, 112],
                 leader: 'Mercedes',
-                growth: '+142%'
+                sample: '4,812',
+                success: '84% Mentions'
             },
             '90s': {
                 labels: ['CHEVROLET', 'CADILLAC', 'MERCEDES', 'LEXUS', 'BMW', 'JEEP', 'MAZDA', 'VOLVO'],
                 values: [180, 165, 140, 120, 95, 80, 45, 30],
                 leader: 'Chevrolet',
-                growth: '+85%'
+                sample: '1,240',
+                success: '62% Mentions'
             },
             '00s': {
-                labels: ['MERCEDES', 'BENTLEY', 'LEXUS', 'BMW', 'LAMBORGHINI', 'CADILLAC', 'PORSCHE', 'RANGE ROVER'],
+                labels: ['MERCEDES', 'BENTLEY', 'LEXUS', 'BMW', 'LAMBO', 'CADILLAC', 'PORSCHE', 'RR'],
                 values: [210, 150, 145, 130, 110, 95, 88, 76],
                 leader: 'Mercedes',
-                growth: '+210%'
+                sample: '2,150',
+                success: '91% Mentions'
             }
         };
 
@@ -366,32 +437,33 @@
                     datasets: [{
                         data: chartData.total.values,
                         backgroundColor: '#ffffff',
-                        borderWidth: 0,
-                        barThickness: 25
+                        barThickness: 24,
+                        borderRadius: 0
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    animation: { duration: 800 },
                     scales: {
                         y: {
                             beginAtZero: true,
-                            grid: { color: 'rgba(255,255,255,0.05)', drawBorder: false },
-                            ticks: { color: '#666', font: { family: 'JetBrains Mono', size: 10 } }
+                            grid: { color: 'rgba(255,255,255,0.1)' },
+                            ticks: { color: '#aaa', font: { family: 'JetBrains Mono', size: 11 } }
                         },
                         x: {
                             grid: { display: false },
-                            ticks: { color: '#ffffff', font: { weight: '800', size: 11 } }
+                            ticks: { color: '#ffffff', font: { family: 'JetBrains Mono', size: 12, weight: '700' } }
                         }
                     },
                     plugins: {
                         legend: { display: false },
                         tooltip: {
-                            backgroundColor: '#111',
-                            padding: 15,
-                            titleFont: { size: 12, weight: 'bold' },
-                            bodyFont: { family: 'JetBrains Mono', size: 11 },
+                            backgroundColor: '#fff',
+                            titleColor: '#000',
+                            bodyColor: '#000',
+                            padding: 16,
+                            titleFont: { family: 'Plus Jakarta Sans', weight: '800', size: 15 },
+                            bodyFont: { family: 'JetBrains Mono', size: 13 },
                             cornerRadius: 0,
                             displayColors: false
                         }
@@ -402,19 +474,26 @@
 
         function updateChart(period) {
             const data = chartData[period];
-            document.getElementById('stat-leader').innerText = data.leader;
-            document.getElementById('stat-growth').innerText = data.growth;
+            
+            // Update Stats
+            document.getElementById('stat-leader').textContent = data.leader;
+            document.getElementById('stat-sample').textContent = data.sample;
+            document.getElementById('stat-success').textContent = data.success;
 
+            // Update Chart
             currentChart.data.labels = data.labels;
             currentChart.data.datasets[0].data = data.values;
             currentChart.update();
 
             document.querySelectorAll('.decade-btn').forEach(btn => {
                 btn.classList.remove('tab-active');
-                btn.classList.add('text-gray-500');
+                btn.classList.add('text-white/60');
             });
-            event.target.classList.add('tab-active');
-            event.target.classList.remove('text-gray-500');
+            
+            if (window.event) {
+                window.event.target.classList.add('tab-active');
+                window.event.target.classList.remove('text-white/60');
+            }
         }
 
         const observer = new IntersectionObserver((entries) => {
