@@ -17,8 +17,8 @@
             --border: rgba(255, 255, 255, 0.15);
             --pos-green: #22c55e;
             --neg-red: #ef4444;
-            --neu-gray: #666666; /* Made Neu segment and labels brighter */
-            --text-muted: #b0b0b0; /* Increased brightness for secondary text */
+            --neu-gray: #666666; 
+            --text-muted: #b0b0b0; 
         }
 
         body {
@@ -48,16 +48,6 @@
         .scroll-reveal.active {
             opacity: 1;
             transform: translateY(0);
-        }
-
-        .tech-tag {
-            background: rgba(255, 255, 255, 0.12);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            padding: 5px 12px;
-            border-radius: 4px;
-            font-size: 11px;
-            font-family: 'JetBrains Mono', monospace;
-            color: #ffffff;
         }
 
         .info-label {
@@ -283,7 +273,6 @@
         lucide.createIcons();
         Chart.register(ChartDataLabels);
 
-        // Colors: Red (Neg), Brighter Gray (Neu), Green (Pos)
         const COLORS = {
             neg: '#ef4444',
             neu: '#666666',
@@ -298,6 +287,20 @@
                     { text: "I pull up in a Benz, and I'm looking like a million.", artist: "50 Cent", song: "P.I.M.P", compound: 0.9 }
                 ]
             },
+            'LEXUS': {
+                avg: [0.08, 0.75, 0.17],
+                snippets: [
+                    { text: "Lexus with the leather, making moves in any weather.", artist: "The Notorious B.I.G.", song: "Warning", compound: 0.7 },
+                    { text: "I hit the highway, in the GS Lex.", artist: "Jay-Z", song: "Empire State of Mind", compound: 0.6 }
+                ]
+            },
+            'CADILLAC': {
+                avg: [0.15, 0.70, 0.15],
+                snippets: [
+                    { text: "Cadillac Seville, the way I feel.", artist: "Snoop Dogg", song: "Gin & Juice", compound: 0.55 },
+                    { text: "Throw some D's on that Cadillac.", artist: "Rich Boy", song: "Throw Some D's", compound: 0.45 }
+                ]
+            },
             'BMW': {
                 avg: [0.12, 0.68, 0.20],
                 snippets: [
@@ -305,22 +308,32 @@
                     { text: "In the black BMW, windows tinted so you can't see.", artist: "Nas", song: "The World is Yours", compound: 0.4 }
                 ]
             },
-            'LEXUS': {
-                avg: [0.08, 0.75, 0.17],
+            'PORSCHE': {
+                avg: [0.07, 0.72, 0.21],
                 snippets: [
-                    { text: "Lexus with the leather, making moves in any weather.", artist: "The Notorious B.I.G.", song: "Warning", compound: 0.7 }
+                    { text: "I'm in a Porsche, 911, and it's fast.", artist: "Rick Ross", song: "Speedin'", compound: 0.75 },
+                    { text: "Drop top Porsche, yeah we cruising.", artist: "Young Thug", song: "Relationship", compound: 0.8 }
                 ]
             },
             'LAMBORGHINI': {
                 avg: [0.05, 0.55, 0.40],
                 snippets: [
-                    { text: "Purple Lambo, rolling through the city like a hero.", artist: "Rick Ross", song: "Purple Lamborghini", compound: 0.85 }
+                    { text: "Purple Lambo, rolling through the city like a hero.", artist: "Rick Ross", song: "Purple Lamborghini", compound: 0.85 },
+                    { text: "Lamborghini Mercy, your chick she so thirsty.", artist: "Kanye West", song: "Mercy", compound: 0.2 }
                 ]
             },
-            'CADILLAC': {
-                avg: [0.15, 0.70, 0.15],
+            'BENTLEY': {
+                avg: [0.09, 0.61, 0.30],
                 snippets: [
-                    { text: "Cadillac Seville, the way I feel.", artist: "Snoop Dogg", song: "Gin & Juice", compound: 0.55 }
+                    { text: "Bentley Mulsanne, I'm at it again.", artist: "Gucci Mane", song: "First Day Out", compound: 0.65 },
+                    { text: "Me and my Bentley, we just getting started.", artist: "Drake", song: "Started From The Bottom", compound: 0.7 }
+                ]
+            },
+            'MAYBACH': {
+                avg: [0.04, 0.76, 0.20],
+                snippets: [
+                    { text: "Maybach Music, I'm the king of the city.", artist: "Rick Ross", song: "Maybach Music III", compound: 0.82 },
+                    { text: "I'm in a Maybach, looking like a star.", artist: "Wiz Khalifa", song: "Black and Yellow", compound: 0.78 }
                 ]
             }
         };
