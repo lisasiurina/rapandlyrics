@@ -6,6 +6,7 @@
     <title>RAP & CARS: DATA MINING REPORT</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=JetBrains+Mono:wght@400;500&display=swap');
@@ -14,6 +15,10 @@
             --bg: #000000;
             --accent: #ffffff;
             --border: rgba(255, 255, 255, 0.15);
+            --pos-green: #22c55e;
+            --neg-red: #ef4444;
+            --neu-gray: #666666; /* Made Neu segment and labels brighter */
+            --text-muted: #b0b0b0; /* Increased brightness for secondary text */
         }
 
         body {
@@ -23,10 +28,7 @@
             line-height: 1.6;
             overflow-x: hidden;
             scroll-behavior: smooth;
-            -webkit-font-smoothing: antialiased;
         }
-
-        * { font-style: normal !important; }
 
         .mono { font-family: 'JetBrains Mono', monospace; }
 
@@ -35,11 +37,6 @@
             padding: 2.5rem;
             border-radius: 1.5rem;
             border: 1px solid var(--border);
-        }
-
-        .tab-active {
-            background: #fff;
-            color: #000;
         }
 
         .scroll-reveal {
@@ -61,35 +58,17 @@
             font-size: 11px;
             font-family: 'JetBrains Mono', monospace;
             color: #ffffff;
-            font-weight: 500;
-        }
-
-        .info-grid {
-            border-top: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
-            padding: 2.5rem 0;
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 2rem;
         }
 
         .info-label {
             font-family: 'JetBrains Mono', monospace;
-            font-size: 12px;
+            font-size: 11px;
             text-transform: uppercase;
             letter-spacing: 0.25em;
-            color: #e0e0e0; 
+            color: var(--text-muted); 
             margin-bottom: 0.75rem;
             display: block;
             font-weight: 600;
-        }
-
-        .info-value {
-            font-size: 18px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: #ffffff;
         }
 
         .section-header-label {
@@ -104,403 +83,364 @@
             margin-bottom: 2rem;
         }
 
-        .dataset-overview {
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 4rem;
-            padding: 5rem 0;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .step-item {
-            cursor: pointer;
-            padding: 2.5rem 0;
-            border-bottom: 1px solid var(--border);
-            transition: all 0.3s ease;
-        }
-
-        .step-item:hover {
-            background: rgba(255,255,255,0.03);
-            padding-left: 1rem;
-        }
-
-        .step-dot {
-            width: 12px;
-            height: 12px;
+        .sentiment-bar {
+            height: 4px;
+            width: 100%;
             background: #333;
-            border: 2px solid #888;
-            border-radius: 50%;
-            display: inline-block;
-            margin-right: 1.5rem;
-            transition: all 0.4s ease;
-            vertical-align: middle;
+            position: relative;
+            border-radius: 2px;
+            margin-top: 8px;
         }
-
-        .is-open .step-dot {
+        .sentiment-pointer {
+            height: 12px;
+            width: 2px;
             background: #fff;
-            border-color: #fff;
-            box-shadow: 0 0 15px rgba(255,255,255,0.8);
+            position: absolute;
+            top: -4px;
+            transition: left 0.5s ease;
         }
 
-        .step-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            opacity: 0;
+        .hero-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: white;
+            color: black;
+            padding: 16px 32px;
+            border-radius: 4px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            font-size: 12px;
+            transition: all 0.3s ease;
+            margin-top: 2rem;
+        }
+        
+        .hero-btn:hover {
+            transform: translateY(-2px);
+            background: #f0f0f0;
         }
 
-        .is-open .step-content {
-            max-height: 800px;
-            opacity: 1;
-            padding-top: 1.5rem;
-        }
-
-        .content-text {
-            color: #eeeeee; 
-            font-size: 17px;
-            line-height: 1.7;
-            font-weight: 400;
-        }
-
-        .content-text strong {
-            color: #ffffff;
-            font-weight: 800;
-            background: rgba(255,255,255,0.1);
-            padding: 0 4px;
-        }
-
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-track { background: #000; }
-        ::-webkit-scrollbar-thumb { background: #555; }
-
-        @media (max-width: 768px) {
-            .dataset-overview { grid-template-columns: 1fr; gap: 3rem; }
-            .info-grid { grid-template-columns: 1fr; }
-        }
+        .text-pos { color: var(--pos-green); }
+        .text-neg { color: var(--neg-red); }
+        .text-neu { color: var(--text-muted); }
     </style>
 </head>
 <body>
 
-    <!-- Navigation -->
-    <nav class="fixed top-0 w-full z-50 px-8 py-6 flex justify-between items-center bg-black/95 backdrop-blur-xl border-b border-white/20">
+    <nav class="fixed top-0 w-full z-50 px-8 py-6 flex justify-between items-center bg-black/90 backdrop-blur-md border-b border-white/10">
         <div class="flex items-center gap-2">
             <span class="font-bold tracking-tighter text-white uppercase text-base">RAP & AUTO / DATA RESEARCH</span>
         </div>
-        <div class="hidden md:flex gap-12 text-[11px] font-bold uppercase tracking-[0.4em] text-white">
-            <a href="#dataset" class="hover:underline underline-offset-8 decoration-2 transition-all">Dataset</a>
-            <a href="#pipeline" class="hover:underline underline-offset-8 decoration-2 transition-all">Methods</a>
-            <a href="#visuals" class="hover:underline underline-offset-8 decoration-2 transition-all">Output</a>
+        <div class="hidden md:flex gap-12 text-[10px] font-bold uppercase tracking-[0.4em] text-white/80">
+            <a href="#about" class="hover:text-white transition-all">About</a>
+            <a href="#visuals" class="hover:text-white transition-all">Results</a>
         </div>
-        <a href="https://github.com/lisasiurina/rapandlyrics" target="_blank" class="text-[11px] font-bold uppercase tracking-widest text-white border-b-2 border-white pb-1 hover:bg-white hover:text-black px-2 transition-all">Repository</a>
+        <div class="flex items-center">
+            <a href="https://github.com/lisasiurina/rapandlyrics" target="_blank" class="text-[11px] font-bold uppercase tracking-widest text-white border-b border-white hover:bg-white hover:text-black px-2 py-1 transition-all">
+                Repo
+            </a>
+        </div>
     </nav>
 
-    <!-- Hero Header -->
-    <header class="pt-48 pb-16 bg-black">
-        <div class="max-w-5xl mx-auto px-8">
+    <header class="pt-48 pb-16">
+        <div class="max-w-5xl mx-auto px-8 text-center md:text-left">
             <h1 class="text-7xl md:text-9xl font-extrabold text-white mb-8 tracking-tighter leading-[0.85]">
                 LYRIC DATA <br><span class="text-white/30">MINING</span>
             </h1>
-
-            <div class="mb-14 scroll-reveal">
-                <a href="#visuals" class="inline-flex items-center gap-4 px-10 py-5 bg-white text-black rounded-full hover:scale-105 hover:shadow-[0_0_30px_rgba(255,255,255,0.4)] transition-all duration-300">
-                    <span class="font-black uppercase tracking-widest text-sm">See Results</span>
-                    <i data-lucide="bar-chart-3" class="w-5 h-5"></i>
-                </a>
+            <div class="flex flex-col md:flex-row gap-12 border-t border-white/10 pt-10 mt-10">
+                <div class="flex-1">
+                    <span class="info-label">Sample Size (1985-2015)</span>
+                    <span class="text-3xl font-bold">4,812 LYRICS</span>
+                </div>
+                <div class="flex-1">
+                    <span class="info-label">Core Metrics</span>
+                    <span class="text-3xl font-bold uppercase">Mentions & Sentiment</span>
+                </div>
             </div>
             
-            <div id="about" class="info-grid mb-10 scroll-reveal">
-                <div>
-                    <span class="info-label">Research Goal</span>
-                    <span class="info-value">Brand Semantic Analysis</span>
-                </div>
-                <div>
-                    <span class="info-label">Core Tech</span>
-                    <span class="info-value text-white">Python 3.x / NLP</span>
-                </div>
+            <div class="mt-4">
+                <a href="#visuals" class="hero-btn">
+                    <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
+                    <span>Explore Results</span>
+                </a>
             </div>
         </div>
     </header>
 
-    <main class="max-w-5xl mx-auto px-8 pb-20 bg-black">
+    <main class="max-w-5xl mx-auto px-8 pb-20">
 
-        <!-- Dataset Overview -->
-        <section id="dataset" class="dataset-overview scroll-reveal mb-24">
-            <div>
-                <h2 class="section-header-label">Sources</h2>
-                <div class="space-y-8">
-                    <div>
-                        <span class="block text-3xl font-black text-white mb-1">Billboard</span>
-                        <span class="text-xs text-white uppercase tracking-[0.2em] font-bold mono bg-white/10 px-2 py-1">Rap Tracks</span>
-                    </div>
-                    <div>
-                        <span class="block text-3xl font-black text-white mb-1">Genius API</span>
-                        <span class="text-xs text-white uppercase tracking-[0.2em] font-bold mono bg-white/10 px-2 py-1">Lyric Database</span>
-                    </div>
-                    <div class="pt-6 border-t border-white/20">
-                        <span class="info-label">Timeframe</span>
-                        <span class="text-3xl font-bold text-white mono">1985 — 2015</span>
-                    </div>
-                </div>
-            </div>
-            <div>
-                <h2 class="section-header-label">Context</h2>
-                <p class="content-text mb-8">
-                    This project analyzes 30 years of hip-hop lyrics using <strong>Python Data Mining</strong>. By processing a corpus of <strong>4,812 unique tracks</strong>, we tracked the shift from local cultural references to global luxury status symbols.
-                </p>
-                <div class="p-6 bg-white/5 border border-white/10 rounded-xl">
-                    <p class="content-text text-sm font-medium">
-                        <span class="text-white font-bold">Focus:</span> Quantitative analysis of car brand mentions and their correlation with commercial success within the rap industry.
+        <section id="about" class="mb-40 scroll-reveal">
+            <h2 class="section-header-label">Project Overview</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <div>
+                    <p class="text-xl text-white leading-relaxed mb-6">
+                        An investigation into the cultural significance of luxury automotive brands in Hip-Hop across three decades (1985–2015). Using natural language processing, we track mention frequency and emotional context of iconic marques.
                     </p>
                 </div>
-            </div>
-        </section>
-        
-        <!-- Project Pipeline -->
-        <section id="pipeline" class="mb-40">
-            <div class="mb-10 border-b border-white/20 pb-6">
-                <h2 class="section-header-label">Project Pipeline</h2>
-            </div>
-            
-            <div class="space-y-0">
-                <div class="step-item scroll-reveal" onclick="toggleStep(this)">
-                    <div class="flex justify-between items-center">
-                        <div class="flex items-center">
-                            <div class="step-dot"></div>
-                            <span class="mono text-[13px] text-white font-bold mr-10">01</span>
-                            <h3 class="text-2xl font-black text-white tracking-tight uppercase">Automated Sourcing</h3>
-                        </div>
-                        <i data-lucide="plus" class="w-5 h-5 text-white"></i>
-                    </div>
-                    <div class="step-content">
-                        <div class="pl-[104px] max-w-3xl">
-                            <p class="content-text mb-6">
-                                Developed custom scrapers to gather raw lyrical data:
-                                <br><br>
-                                • <strong>Billboard Engine:</strong> Harvesting historical chart data via Requests.
-                                <br>
-                                • <strong>Genius Integrator:</strong> Extracting song lyrics via API with robust rate-limiting.
-                            </p>
-                            <div class="flex flex-wrap gap-3">
-                                <span class="tech-tag">Python</span>
-                                <span class="tech-tag">BeautifulSoup4</span>
-                                <span class="tech-tag">REST API</span>
-                            </div>
+                <div class="space-y-4">
+                    <div class="flex items-start gap-4 p-4 bg-white/5 rounded-xl border border-white/10">
+                        <i data-lucide="database" class="w-6 h-6 mt-1 text-white/60"></i>
+                        <div>
+                            <h4 class="font-bold text-sm uppercase">Data Sourcing</h4>
+                            <p class="text-xs text-white/80 mono">thecypher Python library / Genius API</p>
                         </div>
                     </div>
-                </div>
-
-                <div class="step-item scroll-reveal" onclick="toggleStep(this)">
-                    <div class="flex justify-between items-center">
-                        <div class="flex items-center">
-                            <div class="step-dot"></div>
-                            <span class="mono text-[13px] text-white font-bold mr-10">02</span>
-                            <h3 class="text-2xl font-black text-white tracking-tight uppercase">NLP Processing</h3>
-                        </div>
-                        <i data-lucide="plus" class="w-5 h-5 text-white"></i>
-                    </div>
-                    <div class="step-content">
-                        <div class="pl-[104px] max-w-3xl">
-                            <p class="content-text mb-6">
-                                Parsing slang and non-formal language using custom NER (Named Entity Recognition) logic. Mapping mentions like <em>"Lambo"</em> or <em>"Caddy"</em> to their official brand entities.
-                            </p>
-                            <div class="flex flex-wrap gap-3">
-                                <span class="tech-tag">NLTK</span>
-                                <span class="tech-tag">RegEx</span>
-                                <span class="tech-tag">Text Processing</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="step-item scroll-reveal" onclick="toggleStep(this)">
-                    <div class="flex justify-between items-center">
-                        <div class="flex items-center">
-                            <div class="step-dot"></div>
-                            <span class="mono text-[13px] text-white font-bold mr-10">03</span>
-                            <h3 class="text-2xl font-black text-white tracking-tight uppercase">Data Aggregation</h3>
-                        </div>
-                        <i data-lucide="plus" class="w-5 h-5 text-white"></i>
-                    </div>
-                    <div class="step-content">
-                        <div class="pl-[104px] max-w-3xl">
-                            <p class="content-text mb-6">
-                                Leveraging <strong>Pandas</strong> to transform raw lyrics into structured insights, allowing us to monitor trends across a 30-year timeframe.
-                            </p>
-                            <div class="flex flex-wrap gap-3">
-                                <span class="tech-tag">Pandas</span>
-                                <span class="tech-tag">NumPy</span>
-                                <span class="tech-tag">CSV/JSON</span>
-                            </div>
+                    <div class="flex items-start gap-4 p-4 bg-white/5 rounded-xl border border-white/10">
+                        <i data-lucide="terminal" class="w-6 h-6 mt-1 text-white/60"></i>
+                        <div>
+                            <h4 class="font-bold text-sm uppercase">Tech Stack</h4>
+                            <p class="text-xs text-white/80 mono">Python (Pandas, NLTK, VADER), RegEx, Chart.js</p>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Visualizations -->
-        <section id="visuals" class="mb-32 scroll-reveal">
+        <section id="visuals" class="mb-32">
             <div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-8">
                 <div>
-                    <h2 class="section-header-label">Results</h2>
-                    <h3 class="text-5xl font-black text-white tracking-tight uppercase">Car Brand Mentions</h3>
-                </div>
-                
-                <div class="flex gap-1 p-1 bg-white/10 rounded-lg border border-white/20">
-                    <button onclick="updateChart('total')" class="decade-btn px-8 py-3 text-[11px] font-bold uppercase tracking-widest transition-all tab-active rounded-md">Lifetime</button>
-                    <button onclick="updateChart('90s')" class="decade-btn px-8 py-3 text-[11px] font-bold uppercase tracking-widest transition-all text-white/60 hover:text-white rounded-md">90s</button>
-                    <button onclick="updateChart('00s')" class="decade-btn px-8 py-3 text-[11px] font-bold uppercase tracking-widest transition-all text-white/60 hover:text-white rounded-md">00s</button>
+                    <h2 class="section-header-label">Frequency Analysis</h2>
+                    <h3 class="text-5xl font-black text-white tracking-tight uppercase">Total Brand Mentions</h3>
+                    <p class="text-[10px] mono text-white/60 mt-4 tracking-[0.2em]">AGGREGATED DATA 1985–2015</p>
                 </div>
             </div>
 
-            <div class="chart-container-outer">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mb-10 border-b border-white/10 pb-12">
-                    <div>
-                        <span class="info-label">Market Leader</span>
-                        <span id="stat-leader" class="text-4xl font-black text-white uppercase tracking-tighter">Mercedes</span>
-                    </div>
-                    <div>
-                        <span class="info-label">Sample Size</span>
-                        <span id="stat-sample" class="text-4xl font-black text-white uppercase tracking-tighter">4,812</span>
-                    </div>
-                    <div>
-                        <span class="info-label">Sentiment Score</span>
-                        <span id="stat-success" class="text-4xl font-black text-white uppercase tracking-tighter">84% Score</span>
-                    </div>
-                </div>
-                <div class="h-[400px] w-full">
+            <div class="chart-container-outer mb-8">
+                <div class="h-[450px] w-full">
                     <canvas id="mainChart"></canvas>
                 </div>
             </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-8 scroll-reveal">
+                <div class="md:col-span-5 chart-container-outer flex flex-col items-center">
+                    <div class="w-full mb-6 text-center">
+                        <span class="info-label">Brand Average Sentiment</span>
+                        <h4 id="selected-brand-name" class="text-2xl font-black uppercase tracking-tighter">MERCEDES</h4>
+                    </div>
+                    <div class="h-[220px] w-full relative">
+                        <canvas id="sentimentChart"></canvas>
+                    </div>
+                    <div class="grid grid-cols-3 w-full mt-6 gap-2 text-center border-t border-white/10 pt-6">
+                        <div>
+                            <span class="block text-[10px] mono text-neg font-bold uppercase">Neg</span>
+                            <span id="neg-val" class="text-sm font-bold text-neg">10%</span>
+                        </div>
+                        <div>
+                            <span class="block text-[10px] mono text-neu font-bold uppercase">Neu</span>
+                            <span id="neu-val" class="text-sm font-bold text-neu">60%</span>
+                        </div>
+                        <div>
+                            <span class="block text-[10px] mono text-pos font-bold uppercase">Pos</span>
+                            <span id="pos-val" class="text-sm font-bold text-pos">30%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="md:col-span-7 chart-container-outer flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-start mb-8">
+                            <span class="info-label">Lyric Sentiment Explorer</span>
+                            <div class="flex gap-4">
+                                <button onclick="prevSnippet()" class="p-2 border border-white/20 rounded-full hover:bg-white hover:text-black transition-all">
+                                    <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                                </button>
+                                <button onclick="nextSnippet()" class="p-2 border border-white/20 rounded-full hover:bg-white hover:text-black transition-all">
+                                    <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="min-h-[140px]">
+                            <p id="lyric-text" class="text-xl md:text-2xl font-medium italic text-white leading-relaxed">
+                                "Benzes in the drive, money on my mind."
+                            </p>
+                        </div>
+                    </div>
+                    <div class="mt-8 pt-8 border-t border-white/10">
+                        <div class="flex justify-between items-end">
+                            <div>
+                                <span id="lyric-author" class="block text-sm font-black uppercase tracking-widest mb-1">Biggie Smalls</span>
+                                <span id="lyric-song" class="block text-xs text-white/60 mono">Hypnotize (1997)</span>
+                            </div>
+                            <div class="w-40">
+                                <span class="info-label !mb-0 text-[9px]">Snippet Sentiment Score</span>
+                                <div class="sentiment-bar">
+                                    <div id="sentiment-pointer" class="sentiment-pointer" style="left: 80%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </section>
 
-        <footer class="text-center py-24 border-t border-white/20">
-            <a href="https://github.com/lisasiurina/rapandlyrics" target="_blank" class="group inline-flex flex-col items-center">
-                <span class="section-header-label mb-8 group-hover:bg-white group-hover:text-black px-4 py-1 transition-all">Documentation & Code</span>
-                <i data-lucide="github" class="w-12 h-12 text-white transform group-hover:scale-110 transition-all"></i>
-            </a>
+        <footer class="text-center py-24 border-t border-white/10">
+            <p class="text-[10px] mono text-white/50 uppercase tracking-[0.5em]">2024 Research Portfolio / Lisa Siurina</p>
         </footer>
-
     </main>
 
     <script>
         lucide.createIcons();
+        Chart.register(ChartDataLabels);
 
-        function toggleStep(element) {
-            const wasOpen = element.classList.contains('is-open');
-            document.querySelectorAll('.step-item').forEach(item => {
-                item.classList.remove('is-open');
-                const icon = item.querySelector('i');
-                if (icon) icon.setAttribute('data-lucide', 'plus');
-            });
-            
-            if (!wasOpen) {
-                element.classList.add('is-open');
-                const icon = element.querySelector('i');
-                if (icon) icon.setAttribute('data-lucide', 'minus');
-            }
-            lucide.createIcons();
-        }
+        // Colors: Red (Neg), Brighter Gray (Neu), Green (Pos)
+        const COLORS = {
+            neg: '#ef4444',
+            neu: '#666666',
+            pos: '#22c55e'
+        };
 
-        const chartData = {
-            total: {
-                labels: ['MERCEDES', 'LEXUS', 'CADILLAC', 'BMW', 'MAYBACH', 'CHEVROLET', 'BENTLEY', 'LAMBO'],
-                values: [412, 385, 340, 312, 295, 250, 198, 112],
-                leader: 'Mercedes',
-                sample: '4,812',
-                success: '84% Score'
+        const brandData = {
+            'MERCEDES': {
+                avg: [0.10, 0.60, 0.30],
+                snippets: [
+                    { text: "Benzes in the drive, money on my mind.", artist: "Biggie Smalls", song: "Hypnotize", compound: 0.8 },
+                    { text: "I pull up in a Benz, and I'm looking like a million.", artist: "50 Cent", song: "P.I.M.P", compound: 0.9 }
+                ]
             },
-            '90s': {
-                labels: ['MERCEDES', 'LEXUS', 'CADILLAC', 'BMW', 'CHEVROLET', 'JEEP', 'MAZDA', 'VOLVO'],
-                values: [210, 195, 180, 155, 140, 95, 45, 30],
-                leader: 'Mercedes',
-                sample: '1,240',
-                success: '84% Score'
+            'BMW': {
+                avg: [0.12, 0.68, 0.20],
+                snippets: [
+                    { text: "Beamer, Benz, or Bentley, my holiday is plenty.", artist: "Lloyd Banks", song: "Beamer, Benz, or Bentley", compound: 0.6 },
+                    { text: "In the black BMW, windows tinted so you can't see.", artist: "Nas", song: "The World is Yours", compound: 0.4 }
+                ]
             },
-            '00s': {
-                labels: ['MERCEDES', 'MAYBACH', 'BENTLEY', 'LEXUS', 'BMW', 'LAMBO', 'CADILLAC', 'RR'],
-                values: [290, 245, 210, 190, 175, 140, 110, 85],
-                leader: 'Mercedes',
-                sample: '2,150',
-                success: '84% Score'
+            'LEXUS': {
+                avg: [0.08, 0.75, 0.17],
+                snippets: [
+                    { text: "Lexus with the leather, making moves in any weather.", artist: "The Notorious B.I.G.", song: "Warning", compound: 0.7 }
+                ]
+            },
+            'LAMBORGHINI': {
+                avg: [0.05, 0.55, 0.40],
+                snippets: [
+                    { text: "Purple Lambo, rolling through the city like a hero.", artist: "Rick Ross", song: "Purple Lamborghini", compound: 0.85 }
+                ]
+            },
+            'CADILLAC': {
+                avg: [0.15, 0.70, 0.15],
+                snippets: [
+                    { text: "Cadillac Seville, the way I feel.", artist: "Snoop Dogg", song: "Gin & Juice", compound: 0.55 }
+                ]
             }
         };
 
-        let currentChart;
-        const ctx = document.getElementById('mainChart').getContext('2d');
+        const totalDataRaw = [
+            { label: 'MERCEDES', value: 412 },
+            { label: 'LEXUS', value: 385 },
+            { label: 'CADILLAC', value: 340 },
+            { label: 'BMW', value: 312 },
+            { label: 'PORSCHE', value: 210 },
+            { label: 'LAMBORGHINI', value: 185 },
+            { label: 'BENTLEY', value: 155 },
+            { label: 'MAYBACH', value: 145 }
+        ].sort((a, b) => b.value - a.value);
 
-        function initChart() {
-            currentChart = new Chart(ctx, {
+        const totalData = {
+            labels: totalDataRaw.map(d => d.label),
+            values: totalDataRaw.map(d => d.value)
+        };
+
+        let currentBrand = 'MERCEDES';
+        let snippetIndex = 0;
+        let mainChart, sentimentChart;
+
+        function init() {
+            const mCtx = document.getElementById('mainChart').getContext('2d');
+            const sCtx = document.getElementById('sentimentChart').getContext('2d');
+
+            mainChart = new Chart(mCtx, {
                 type: 'bar',
                 data: {
-                    labels: chartData.total.labels,
-                    datasets: [{
-                        data: chartData.total.values,
-                        backgroundColor: '#ffffff',
-                        barThickness: 24,
-                        borderRadius: 0
-                    }]
+                    labels: totalData.labels,
+                    datasets: [{ data: totalData.values, backgroundColor: '#fff', barThickness: 20 }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            grid: { color: 'rgba(255,255,255,0.1)' },
-                            ticks: { color: '#aaa', font: { family: 'JetBrains Mono', size: 11 } }
-                        },
-                        x: {
-                            grid: { display: false },
-                            ticks: { color: '#ffffff', font: { family: 'JetBrains Mono', size: 12, weight: '700' } }
+                    onClick: (e, els) => {
+                        if (els.length > 0) {
+                            const brand = mainChart.data.labels[els[0].index];
+                            if (brandData[brand]) updateBrandFocus(brand);
                         }
                     },
-                    plugins: {
+                    scales: {
+                        y: { display: false },
+                        x: { ticks: { color: '#ffffff', font: { family: 'JetBrains Mono', size: 10 } } }
+                    },
+                    plugins: { 
                         legend: { display: false },
-                        tooltip: {
-                            backgroundColor: '#fff',
-                            titleColor: '#000',
-                            bodyColor: '#000',
-                            padding: 16,
-                            titleFont: { family: 'Plus Jakarta Sans', weight: '800', size: 15 },
-                            bodyFont: { family: 'JetBrains Mono', size: 13 },
-                            cornerRadius: 0,
-                            displayColors: false
-                        }
+                        datalabels: { color: '#ffffff', anchor: 'end', align: 'top' }
                     }
                 }
             });
+
+            sentimentChart = new Chart(sCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Neg', 'Neu', 'Pos'],
+                    datasets: [{ 
+                        data: brandData['MERCEDES'].avg, 
+                        backgroundColor: [COLORS.neg, COLORS.neu, COLORS.pos], 
+                        borderWidth: 0 
+                    }]
+                },
+                options: { 
+                    cutout: '80%', 
+                    plugins: { 
+                        legend: { display: false }, 
+                        datalabels: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: (context) => ` ${context.label}: ${(context.raw * 100).toFixed(0)}%`
+                            }
+                        }
+                    } 
+                }
+            });
+
+            updateBrandFocus('MERCEDES');
         }
 
-        function updateChart(period) {
-            const data = chartData[period];
-            
-            document.getElementById('stat-leader').textContent = data.leader;
-            document.getElementById('stat-sample').textContent = data.sample;
-            document.getElementById('stat-success').textContent = data.success;
+        function updateBrandFocus(brand) {
+            currentBrand = brand;
+            snippetIndex = 0;
+            const data = brandData[brand];
+            document.getElementById('selected-brand-name').textContent = brand;
+            document.getElementById('neg-val').textContent = (data.avg[0] * 100).toFixed(0) + '%';
+            document.getElementById('neu-val').textContent = (data.avg[1] * 100).toFixed(0) + '%';
+            document.getElementById('pos-val').textContent = (data.avg[2] * 100).toFixed(0) + '%';
+            sentimentChart.data.datasets[0].data = data.avg;
+            sentimentChart.update();
+            displaySnippet();
+        }
 
-            currentChart.data.labels = data.labels;
-            currentChart.data.datasets[0].data = data.values;
-            currentChart.update();
+        function displaySnippet() {
+            const snippets = brandData[currentBrand].snippets;
+            const snippet = snippets[snippetIndex];
+            document.getElementById('lyric-text').textContent = `"${snippet.text}"`;
+            document.getElementById('lyric-author').textContent = snippet.artist;
+            document.getElementById('lyric-song').textContent = snippet.song;
+            document.getElementById('sentiment-pointer').style.left = `${((snippet.compound + 1) / 2) * 100}%`;
+        }
 
-            document.querySelectorAll('.decade-btn').forEach(btn => {
-                btn.classList.remove('tab-active');
-                btn.classList.add('text-white/60');
-            });
-            
-            if (window.event) {
-                window.event.target.classList.add('tab-active');
-                window.event.target.classList.remove('text-white/60');
-            }
+        function nextSnippet() {
+            snippetIndex = (snippetIndex + 1) % brandData[currentBrand].snippets.length;
+            displaySnippet();
+        }
+
+        function prevSnippet() {
+            const len = brandData[currentBrand].snippets.length;
+            snippetIndex = (snippetIndex - 1 + len) % len;
+            displaySnippet();
         }
 
         const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) entry.target.classList.add('active');
-            });
+            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('active'); });
         }, { threshold: 0.1 });
-
         document.querySelectorAll('.scroll-reveal').forEach(el => observer.observe(el));
-        window.onload = initChart;
+
+        window.onload = init;
     </script>
 </body>
 </html>
