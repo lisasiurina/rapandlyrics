@@ -14,11 +14,11 @@
         :root {
             --bg: #000000;
             --accent: #ffffff;
-            --border: rgba(255, 255, 255, 0.3); /* Повысил контраст границ */
+            --border: rgba(255, 255, 255, 0.3);
             --pos-green: #22c55e;
             --neg-red: #ef4444;
             --neu-gray: #777777; 
-            --text-muted: #d1d1d1; /* Сделал светлее для читаемости (был #888) */
+            --text-muted: #d1d1d1;
         }
 
         body {
@@ -56,7 +56,7 @@
             font-size: 11px;
             text-transform: uppercase;
             letter-spacing: 0.25em;
-            color: #ffffff; /* Заменил на белый для четкости */
+            color: #ffffff;
             margin-bottom: 0.75rem;
             display: block;
             font-weight: 700;
@@ -106,7 +106,7 @@
         .step-num {
             font-family: 'JetBrains Mono', monospace;
             font-size: 14px;
-            color: #ffffff; /* Сделал белым */
+            color: #ffffff;
             margin-right: 2rem;
             font-weight: 800;
         }
@@ -122,7 +122,7 @@
         }
 
         .pipeline-text {
-            color: #e5e5e5; /* Очень светлый серый для текста описания */
+            color: #e5e5e5;
             font-size: 1.1rem;
             line-height: 1.7;
         }
@@ -180,6 +180,11 @@
             justify-content: center;
             margin: 0 auto;
         }
+
+        /* Цветовые классы для подписей */
+        .text-neg { color: var(--neg-red); }
+        .text-neu { color: var(--neu-gray); }
+        .text-pos { color: var(--pos-green); }
     </style>
 </head>
 <body>
@@ -295,7 +300,7 @@
             <div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-8">
                 <div>
                     <h2 class="section-header-label">Frequency Analysis</h2>
-                    <h3 class="text-5xl font-black text-white tracking-tight uppercase">Total Brand Mentions</h3>
+                    <h3 class="text-5xl font-black text-white tracking-tight uppercase">Total Mentions in Lyrics</h3>
                     <p class="text-[10px] mono text-white mt-4 tracking-[0.2em] font-bold">AGGREGATED DATA 1985–2015</p>
                 </div>
                 <div class="bg-white/10 p-4 border-2 border-white rounded-lg">
@@ -324,16 +329,16 @@
 
                     <div class="grid grid-cols-3 w-full mt-10 gap-2 text-center border-t border-white/20 pt-8">
                         <div>
-                            <span class="block text-[10px] mono text-neg-red font-black uppercase">Neg</span>
-                            <span id="neg-val" class="text-lg font-black text-neg-red">10%</span>
+                            <span class="block text-[10px] mono font-black uppercase text-neg">Neg</span>
+                            <span id="neg-val" class="text-lg font-black text-neg">10%</span>
                         </div>
                         <div>
-                            <span class="block text-[10px] mono text-white font-black uppercase">Neu</span>
-                            <span id="neu-val" class="text-lg font-black text-white">60%</span>
+                            <span class="block text-[10px] mono font-black uppercase text-neu">Neu</span>
+                            <span id="neu-val" class="text-lg font-black text-neu">60%</span>
                         </div>
                         <div>
-                            <span class="block text-[10px] mono text-pos-green font-black uppercase">Pos</span>
-                            <span id="pos-val" class="text-lg font-black text-pos-green">30%</span>
+                            <span class="block text-[10px] mono font-black uppercase text-pos">Pos</span>
+                            <span id="pos-val" class="text-lg font-black text-pos">30%</span>
                         </div>
                     </div>
                 </div>
@@ -403,7 +408,7 @@
 
         const COLORS = {
             neg: '#ef4444',
-            neu: '#444444',
+            neu: '#777777', 
             pos: '#22c55e'
         };
 
@@ -490,22 +495,17 @@
             const mCtx = document.getElementById('mainChart').getContext('2d');
             const sCtx = document.getElementById('sentimentChart').getContext('2d');
 
-            const hoverColor = '#ffffff';
-            const baseColor = 'rgba(255, 255, 255, 0.45)';
-
             mainChart = new Chart(mCtx, {
                 type: 'bar',
                 data: {
                     labels: totalData.labels,
                     datasets: [{ 
                         data: totalData.values, 
-                        backgroundColor: (context) => {
-                            return context.active ? hoverColor : baseColor;
-                        },
+                        backgroundColor: 'rgba(255, 255, 255, 0.35)', // По дефолту все одинаковые
                         hoverBackgroundColor: '#ffffff',
-                        borderColor: '#ffffff',
-                        borderWidth: 0,
-                        borderRadius: 4,
+                        borderColor: 'rgba(255, 255, 255, 0.8)',
+                        borderWidth: 1,
+                        borderRadius: 2,
                         barThickness: 45,
                     }]
                 },
@@ -514,7 +514,6 @@
                     maintainAspectRatio: false,
                     onHover: (event, chartElement) => {
                         event.native.target.style.cursor = chartElement[0] ? 'pointer' : 'default';
-                        mainChart.render();
                     },
                     onClick: (e, els) => {
                         if (els.length > 0) {
@@ -546,7 +545,7 @@
                             displayColors: false,
                             callbacks: {
                                 title: (tooltipItems) => tooltipItems[0].label,
-                                label: (context) => `Total Mentions in Lyrics: ${context.raw}`
+                                label: (context) => `Total Mentions: ${context.raw}`
                             }
                         },
                         datalabels: { 
@@ -555,10 +554,10 @@
                             align: 'top', 
                             offset: 8,
                             padding: 6,
-                            backgroundColor: 'rgba(255,255,255,0.2)',
+                            backgroundColor: 'rgba(255,255,255,0.15)',
                             borderRadius: 4,
                             formatter: (value, context) => {
-                                if (context.chart.data.labels[context.dataIndex] === 'MERCEDES') return `LEADER ${value}`;
+                                if (context.chart.data.labels[context.dataIndex] === 'MERCEDES') return `TOP ${value}`;
                                 return value;
                             },
                             font: { family: 'JetBrains Mono', size: 10, weight: '900' }
@@ -620,6 +619,13 @@
             
             sentimentChart.data.datasets[0].data = data.avg;
             sentimentChart.update();
+            
+            // Обновляем цвета баров для подсветки активного
+            mainChart.data.datasets[0].backgroundColor = mainChart.data.labels.map(l => 
+                l === brand ? 'rgba(255, 255, 255, 1)' : 'rgba(255, 255, 255, 0.35)'
+            );
+            mainChart.update(); 
+
             displaySnippet();
         }
 
